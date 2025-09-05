@@ -1,0 +1,55 @@
+#validation-nrodocumento, 
+#validation-nrohistoria,
+#validation-paterno,
+#validation-materno,
+#validation-nombres
+{
+    color: red;
+    font-size: 15px;
+}
+
+.alineacion{
+    display: flex;
+    align-items: center;
+}
+
+.consulta{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.input-validation{
+    border-color: red !important;
+}
+
+.datos_title{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.datos_subtitle{
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#paciente{
+    font-size: 18px;
+    color: #00cc99;
+}
+
+.invisible{
+    visibility: hidden;
+}
+
+.al-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 991px) {
+    
+    .responsive{
+        margin-top: 10px;
+    }
+}

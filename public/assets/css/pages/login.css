@@ -1,0 +1,100 @@
+.login_background{
+    /* background-color:#acb8ff; */
+    /* width: 100%;
+    height: auto; */
+    background-image: url("../../img/hospital-nacional-arzobispo-loayza.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+}
+.login_image{
+    background-color:white;
+    box-shadow: -2px 12px 50px -5px #c9c7c7;
+}
+.text-bold {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+.text-gray {
+    color: #808080;
+}
+.login_section .custom-control-description{
+    color: #fff !important;
+}
+.login_section{
+    padding: 25px 30px 30px 30px;
+    border-radius: 5px;
+}
+.login_section_top{
+    margin: 25% 0;
+}
+.login_section input{
+    padding-left: 20px;
+    background-color: rgba(170, 177, 185,0.5);
+    color: #fff;
+    border:none;
+}
+.login_section input:focus{
+    background-color: rgba(170, 177, 185,0.5);
+    color: #fff;
+    border:none;
+}
+.titulo-login{
+    border-bottom: 1px solid #0002fa;
+    color: #0002fa;
+}
+.icon-fb{
+    background-color: #3b5998;
+    color: white;
+    border-radius: 50%;
+    padding: 3px 8px;
+}
+.icon-fb:hover{
+    color: #e1dada;
+}
+.red-social{
+    margin: 0 20px;
+}
+.login_bottom{
+    font-weight: 500;
+    background-color: #0002fa;
+    transition: all 1s;
+}
+.login_bottom:hover{
+    background-color: #0000b2;
+}
+.login_section a{
+    cursor: pointer;
+}
+.admire_logo{
+    margin-bottom: 15px;
+    width:100px;
+    height:100px;
+}
+.login_section .input-group-addon {
+    background-color: rgba(170, 177, 185,0.5);
+    border: none;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+.login_section input {
+    color: #5f5f5f;
+    border: 1px solid #cfd3d7;
+    background-color: rgb(170 177 185 / 15%);
+}
+.form-control:hover, .form-control:focus {
+    padding-left: 20px !important;
+    background-color: #fff !important;
+    color: #5f5f5f !important;
+    box-shadow: none !important;
+    border: 1px solid rgb(102 175 233 / 61%) !important;
+}
+/*register*/
+.register_section_top{
+    margin: 10% 0;
+}
+/*forgot password*/
+.forgot_section_top{
+    margin: 35% 0;
+}
