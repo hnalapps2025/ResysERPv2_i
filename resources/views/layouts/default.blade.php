@@ -458,6 +458,12 @@
                                     &nbsp;Reporte Citados
                                 </a>
                             </li>
+							<li>
+                                <a href="{{asset('ArchivoClinico/ReporteHospitalizados')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Reporte Hospitalizados
+                                </a>
+                            </li>
                         </ul>
 					</li>
                 </ul>

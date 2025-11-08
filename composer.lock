@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f71a42e112540cb3a7f190c0390b888",
+    "content-hash": "ddf7536551cb27a769bb6f5cb1db830b",
     "packages": [
         {
             "name": "brick/math",
@@ -3640,6 +3640,119 @@
                 "source": "https://github.com/ramsey/uuid/tree/4.9.0"
             },
             "time": "2025-06-25T14:20:11+00:00"
+        },
+        {
+            "name": "rivcar/jqgrid",
+            "version": "6.6.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/remyrivera/jqgrid.git",
+                "reference": "c784787ca4a4f77b54966dc808053918cce18584"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/remyrivera/jqgrid/zipball/c784787ca4a4f77b54966dc808053918cce18584",
+                "reference": "c784787ca4a4f77b54966dc808053918cce18584",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.4",
+                "rivcar/tcpdf": ">=6.5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "rivcar\\jqgrid\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Remy Rivera Rivera",
+                    "email": "remyrivera@gmail.com"
+                }
+            ],
+            "description": "Grilla para Laravel",
+            "support": {
+                "issues": "https://github.com/remyrivera/jqgrid/issues",
+                "source": "https://github.com/remyrivera/jqgrid/tree/v6.6.5"
+            },
+            "time": "2024-05-13T21:21:15+00:00"
+        },
+        {
+            "name": "rivcar/tcpdf",
+            "version": "7.0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/remyrivera/TCPDF.git",
+                "reference": "176046ebc8ccdd008bf36b63db3e8d5bffdab56a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/remyrivera/TCPDF/zipball/176046ebc8ccdd008bf36b63db3e8d5bffdab56a",
+                "reference": "176046ebc8ccdd008bf36b63db3e8d5bffdab56a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "config",
+                    "include",
+                    "tcpdf.php",
+                    "tcpdf_parser.php",
+                    "tcpdf_import.php",
+                    "tcpdf_barcodes_1d.php",
+                    "tcpdf_barcodes_2d.php",
+                    "include/tcpdf_colors.php",
+                    "include/tcpdf_filters.php",
+                    "include/tcpdf_font_data.php",
+                    "include/tcpdf_fonts.php",
+                    "include/tcpdf_images.php",
+                    "include/tcpdf_static.php",
+                    "include/barcodes/datamatrix.php",
+                    "include/barcodes/pdf417.php",
+                    "include/barcodes/qrcode.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "TCPDF"
+                }
+            ],
+            "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
+            "homepage": "http://www.tcpdf.org/",
+            "keywords": [
+                "PDFD32000-2008",
+                "TCPDF",
+                "barcodes",
+                "datamatrix",
+                "pdf",
+                "pdf417",
+                "qrcode"
+            ],
+            "support": {
+                "source": "https://github.com/remyrivera/TCPDF/tree/v7.0.2.1"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tcpdf%20project",
+                    "type": "custom"
+                }
+            ],
+            "time": "2024-10-21T22:32:08+00:00"
         },
         {
             "name": "spatie/laravel-html",

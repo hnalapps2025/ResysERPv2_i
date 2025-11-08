@@ -33,3 +33,4 @@ Route::get('ArchivoClinico/NoDevueltasXRuta',[ArchivoClinicoController::class, '
 Route::post('ArchivoClinico/NoDevueltasXRuta',[ArchivoClinicoController::class, 'NoDevueltasXRuta'])->middleware('auth:empleado');
 Route::get('ArchivoClinico/ReporteCitados',[ArchivoClinicoController::class, 'ReporteCitados'])->middleware('auth:empleado');
 Route::post('ArchivoClinico/ReporteCitados',[ArchivoClinicoController::class, 'ReporteCitados'])->middleware('auth:empleado');
+Route::get('ArchivoClinico/ReporteHospitalizados',[ArchivoClinicoController::class, 'ReporteHospitalizados'])->middleware('auth:empleado');
