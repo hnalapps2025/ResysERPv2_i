@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ConsultaExternaController;
 use App\Http\Controllers\WSConsultaExternaController;
 use App\Http\Controllers\ArchivoClinicoController;
+use App\Http\Controllers\ReferenciasController;
 
 Route::get('login', [LoginController::class, 'login'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
@@ -34,3 +35,6 @@ Route::post('ArchivoClinico/NoDevueltasXRuta',[ArchivoClinicoController::class, 
 Route::get('ArchivoClinico/ReporteCitados',[ArchivoClinicoController::class, 'ReporteCitados'])->middleware('auth:empleado');
 Route::post('ArchivoClinico/ReporteCitados',[ArchivoClinicoController::class, 'ReporteCitados'])->middleware('auth:empleado');
 Route::get('ArchivoClinico/ReporteHospitalizados',[ArchivoClinicoController::class, 'ReporteHospitalizados'])->middleware('auth:empleado');
+//Referencias
+Route::get('Referencias/Refcon/indicador_mensual',[ReferenciasController::class, 'indicador_mensual'])->middleware('auth:empleado');
+Route::post('Referencias/Refcon/indicador_mensual',[ReferenciasController::class, 'indicador_mensual'])->middleware('auth:empleado');
