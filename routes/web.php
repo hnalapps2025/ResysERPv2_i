@@ -38,3 +38,5 @@ Route::get('ArchivoClinico/ReporteHospitalizados',[ArchivoClinicoController::cla
 //Referencias
 Route::get('Referencias/Refcon/indicador_mensual',[ReferenciasController::class, 'indicador_mensual'])->middleware('auth:empleado');
 Route::post('Referencias/Refcon/indicador_mensual',[ReferenciasController::class, 'indicador_mensual'])->middleware('auth:empleado');
+Route::get('Referencias/contrareferir',[ReferenciasController::class, 'contrareferir'])->middleware('auth:empleado');
+Route::post('Referencias/contrareferir',[ReferenciasController::class, 'contrareferir'])->middleware('auth:empleado');

@@ -72,4 +72,54 @@ class ReferenciasController extends Controller
 		else
 			return view('Referencias.indicador_mensual');
 	}
+	public function contrareferir(Request $request)
+	{
+		if($request->method()=='POST')
+		{
+			$resultado=false;
+			$mensaje=null;
+			$datos=null;
+			//////
+			$PaginaCookie=RS_Referencia::ObtenerCookiePrincipalRefcon(RS_Referencia::$username,RS_Referencia::$password);
+			if($PaginaCookie['valid'])
+			{
+				$parametros=[
+					"fechaini"=>(new \DateTime($request->fechai))->format('d/m/Y')
+					,"fechafin"=>(new \DateTime($request->fechaf))->format('d/m/Y')
+					,"idestado"=>5
+				];
+				$ObtenerListaReferencias=RS_Referencia::ObtenerListaReferencias($PaginaCookie,$parametros);
+				if($ObtenerListaReferencias['valid'])
+				{
+					if(count($ObtenerListaReferencias['datos'])>0)
+					{
+						foreach($ObtenerListaReferencias['datos'] as $key=>$referencia)
+						{
+							$resultado_p=false;
+							$mensaje_p=null;
+							$GuardarParaContrareferencia=RS_Referencia::GuardarParaContrareferencia($PaginaCookie,$referencia);
+							if($GuardarParaContrareferencia['resultado'])
+								$resultado_p=true;
+							else
+								$mensaje_p=$GuardarParaContrareferencia['mensaje'];
+							$ObtenerListaReferencias['datos'][$key]['resultado']=$resultado_p;
+							$ObtenerListaReferencias['datos'][$key]['mensaje']=$mensaje_p;
+						}
+						$datos=$ObtenerListaReferencias['datos'];
+						$resultado=true;
+					}
+					else
+						$mensaje='No se encontraron referencias con los datos ingresados';
+				}
+				else
+					$mensaje=$ObtenerListaReferencias['mensaje'];
+			}
+			else
+				$mensaje=$PaginaCookie['mensaje'];
+			//////
+			return ['resultado'=>$resultado,'mensaje'=>$mensaje,'datos'=>$datos];
+		}
+		else
+			return view('Referencias.contrareferir');
+	}
 }

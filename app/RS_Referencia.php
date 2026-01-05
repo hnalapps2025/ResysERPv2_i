@@ -1,5 +1,8 @@
 <?php
 namespace App;
+
+use Illuminate\Support\Facades\DB;
+
 class RS_Referencia
 {
 	public static $username="44856543";
@@ -284,4 +287,158 @@ class RS_Referencia
 			$mensaje=$CookiePrincipalRefcon['mensaje'];
 		return ['valid'=>$validador,'mensaje'=>$mensaje];
 	}
+	public static function GuardarParaContrareferencia($CookiePrincipalRefcon,$referencia)
+    {
+        $resultado=false;
+		$mensaje=null;
+		$datos=null;
+		if($CookiePrincipalRefcon['valid'])
+		{
+			$parametros['C']='INFORMACION';
+			$parametros['S']='REGISTROCONTRAREF';
+			$parametros['idenvio']='R';
+			$parametros['fecha']=date('Ymd');
+			$parametros['hora']=date('H:i:s');
+			$parametros['idestab']=$referencia['idestorigen'];
+			$parametros['idestreferido']=$referencia['idestorigen'];
+			$parametros['idups']='220000';
+			$parametros['idupsdestino']=$referencia['idupsorigen'];
+			$parametros['idupsdestinodato']=$referencia['idupsorigen'];
+			$parametros['fgprioridad']='0';
+			//$parametros['idespecialidad']=$referencia['idespecialidad'];
+			$parametros['idespecialidad']=79;
+			$parametros['idtipodocref']='1';
+			$parametros['numdocref']='41414939';
+			$parametros['nroreferencia']=explode('-',$referencia['nroreferencia'])[1];
+			$parametros['idreferencia']='';
+			$parametros['idpersonalrefiere']='62816';
+			$parametros['calireferencia']='J';
+			$parametros['calireferenciacomentario']='';
+			$parametros['condicionusuario']='ME';
+			$parametros['idcita']='';
+			$parametros['idtipodoc']=$referencia['idtipodoc'];
+			$parametros['numdoc']=$referencia['numdoc'];
+			$parametros['nrohis']=DB::selectOne("SELECT NroHistoriaClinica FROM Pacientes WHERE NroDocumento = ?", [$referencia['numdoc']])->NroHistoriaClinica ?? null;
+			$parametros['idsexo']=$referencia['idsexo'];
+			$parametros['idfinanciador']=$referencia['idfinanciador'];
+			$parametros['fechnacpac']=$referencia['fechnacpac'];			
+			$parametros['nombpac']=$referencia['nombpac'];
+			$parametros['apelpatpac']=$referencia['apelpatpac'];
+			$parametros['apelmatpac']=$referencia['apelmatpac'];			
+			$parametros['idpaciente']=$referencia['idpaciente'];
+			$parametros['codafiliacion']=$referencia['numafil'];
+			$parametros['correopac']=$referencia['correopac'];
+			$parametros['celularpac']=$referencia['celularpac'];
+			$parametros['direccion']=$referencia['direccion'];
+			$parametros['idubigeores']=$referencia['idubigeores'];
+			$parametros['direccionnew']=$referencia['direccion'];
+			$parametros['idubigeoresnew']=$referencia['idubigeores'];
+			$parametros['idtipoatencion']='C';			
+			$parametros['condicion']='';
+			$parametros['caditemcpt']='';
+			$parametros['caditempru']='';
+			$parametros['caditemexa']='';
+			$parametros['caditems']='';
+			$parametros['caditemsc']='';
+			$parametros['terrestre']='T';
+			$parametros['aereo']='';
+			$parametros['fluvial']='';
+			$parametros['maritimo']='';
+			$parametros['temp']='';
+			$parametros['pa']='';
+			$parametros['fr']='';
+			$parametros['fc']='';
+			$parametros['idexfisico']='';
+			$parametros['numdocresp']='';
+			$parametros['numdocacomp']='';
+			$parametros['idmotivoref']='';
+			$parametros['obsmotivoref']='';
+			$parametros['idcitaref']=$referencia['idcita'];
+			$parametros['idpersonalresp']='';
+			$parametros['idpersonalacomp']='';			
+			$parametros['iddisa']='36';
+			$parametros['idred']='00';
+			$parametros['idmicrored']='00';
+			$parametros['seccodigo']='1';			
+			$parametros['idpersonalreg']='159360';
+			$parametros['recomendacion']='';
+			$parametros['notasobs']='';
+			$parametros['idreferenciaold']=$referencia['idreferencia'];
+			$parametros['regcontraref']='C';
+			$parametros['idusuarioreg']='60745';
+			//dd($parametros);
+			$Cookie=$CookiePrincipalRefcon['pagina'][0];
+			preg_match_all('/^Set-Cookie:\s*([^;]*)/mi',$Cookie,$Cookies);
+			$url='https://refcon.minsa.gob.pe/refconv02/his/referencia';
+			$pagina1=RS_Funciones::LeerPagina($url,'POST',$parametros,count($Cookies)==2?array('Cookie: '.implode('; ',$Cookies[1])):[]);
+			//dd($pagina1);
+			if(count($pagina1)==2)
+			{
+				if(strlen(trim($pagina1[1]))==0)
+				{
+					$xJson = json_decode(
+						collect(explode("\r\n",trim($pagina1[0])))
+							->filter(fn($h) => str_starts_with($h, 'X-JSON:'))
+							->map(fn($h) => trim(str_replace('X-JSON:', '', $h)))
+							->first(),
+						true
+					);
+					if($xJson['rpta']==1)
+					{
+						$CambiarEstadoRefrencia=self::CambiarEstadoRefrencia($CookiePrincipalRefcon,$referencia['idreferencia'],8);
+						if($CambiarEstadoRefrencia['resultado'])
+						{
+							$datos=$CambiarEstadoRefrencia['datos'];
+							$resultado=true;
+						}
+						else
+							$mensaje=$CambiarEstadoRefrencia['mensaje'];
+					}
+					else
+						$mensaje=$xJson['msj'];
+				}
+				else
+					$mensaje=$pagina1[1];
+			}
+			else
+				$mensaje="Fallo Pagina de refcon recibir paciente";
+		}
+		else
+			$mensaje=$PaginaCookie['mensaje'];
+		return ['resultado'=>$resultado,'mensaje'=>$mensaje,'datos'=>$datos];
+    }
+	public static function CambiarEstadoRefrencia($CookiePrincipalRefcon,$idreferencia,$fgestado)
+    {
+        $resultado=false;
+		$mensaje=null;
+		$datos=null;
+		if($CookiePrincipalRefcon['valid'])
+		{
+			$parametros['C']='REFERENCIA';
+			$parametros['S']='CHANGEESTADO';
+			$parametros['idreferencia']=$idreferencia;
+			$parametros['fgestado']=$fgestado;
+			$Cookie=$CookiePrincipalRefcon['pagina'][0];
+			preg_match_all('/^Set-Cookie:\s*([^;]*)/mi',$Cookie,$Cookies);
+			$url='https://refcon.minsa.gob.pe/refconv02/his/referencia';
+			$pagina1=RS_Funciones::LeerPagina($url,'POST',$parametros,count($Cookies)==2?array('Cookie: '.implode('; ',$Cookies[1])):[]);
+			//dd($pagina1);
+			if(count($pagina1)==2)
+			{
+				if(strlen(trim($pagina1[1]))==0)
+				{
+					$datos=$pagina1;
+					$resultado=true;
+					//dd($pagina1);
+				}
+				else
+					$mensaje=$pagina1[1];
+			}
+			else
+				$mensaje="Fallo Pagina de refcon recibir paciente";
+		}
+		else
+			$mensaje=$PaginaCookie['mensaje'];
+		return ['resultado'=>$resultado,'mensaje'=>$mensaje,'datos'=>$datos];
+    }
 }
