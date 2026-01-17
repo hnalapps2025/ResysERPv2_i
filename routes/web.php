@@ -17,8 +17,11 @@ Route::get('principal',[LoginController::class, 'principal'])->middleware('auth:
 //ConsultaExterna
 Route::get('ConsultaExterna/FUAMasivo',[ConsultaExternaController::class, 'FUAMasivo'])->middleware('auth:empleado');
 Route::post('ConsultaExterna/FUAMasivo',[ConsultaExternaController::class, 'FUAMasivo'])->middleware('auth:empleado');
+Route::get('ConsultaExterna/HISMasivo',[ConsultaExternaController::class, 'HISMasivo'])->middleware('auth:empleado');
+Route::post('ConsultaExterna/HISMasivo',[ConsultaExternaController::class, 'HISMasivo'])->middleware('auth:empleado');
 //ConsultaExternaWS
 Route::post('WSConsultaExterna/FUAMasivo/buscar_especialidades_x_fecha',[WSConsultaExternaController::class, 'buscar_especialidades_x_fecha'])->middleware('auth:empleado');
+Route::post('WSConsultaExterna/HISMasivo/listar_servicios_x_fecha',[WSConsultaExternaController::class, 'listar_servicios_x_fecha'])->middleware('auth:empleado');
 //Archivo Clinico
 Route::get('ArchivoClinico/ConsultaMovimientoHistoria',[ArchivoClinicoController::class, 'ConsultaMovimientoHistoria'])->middleware('auth:empleado');
 Route::post('ArchivoClinico/ConsultaMovimientoHistoria',[ArchivoClinicoController::class, 'ConsultaMovimientoHistoria'])->middleware('auth:empleado');

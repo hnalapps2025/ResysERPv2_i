@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use App\RS_His;
 
 class ConsultaExternaController extends Controller
 {
@@ -59,5 +60,33 @@ and Atenciones.idEstadoAtencion<>0", [$request->IdTipoServicio, $request->fecha]
 		}
 		else
 			return view('ConsultaExterna.FUAMasivo');
+	}
+	
+	public function HISMasivo(Request $request)
+	{
+		if($request->method()=='POST')
+		{
+			$resultado=false;
+			$mensaje=null;
+			$datos=null;
+			$ObtenerDatosHisMasivo=RS_His::ObtenerDatosHisMasivo($request->fecha,$request->IdTipoServicio,$request->id_esp,$request->servicio);
+			if($ObtenerDatosHisMasivo['resultado'])
+			{
+				$datos=$ObtenerDatosHisMasivo['datos'];
+				$resultado=true;
+			}
+			else
+				$mensaje=$ObtenerDatosHisMasivo['mensaje'];
+			if($resultado)
+			{
+				setlocale(LC_TIME, 'es_ES.UTF-8', 'Spanish_Spain');
+				return view('ConsultaExterna.HISMasivo')
+					->with("datos",$datos);
+			}
+			else
+				return Redirect::back()->withErrors([$mensaje]);
+		}
+		else
+			return view('ConsultaExterna.HISMasivo');
 	}
 }

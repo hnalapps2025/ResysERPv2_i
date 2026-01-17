@@ -13,15 +13,11 @@ class WSConsultaExternaController extends Controller
 			$resultado=false;
 			$mensaje=null;
 			$datos=null;
-			$filas=DB::select("select distinct SIGHAL_Especialidad.id_esp, SIGHAL_Especialidad.especialidad
-from Atenciones
-inner join Servicios on Atenciones.IdServicioIngreso=Servicios.IdServicio
-inner join SIGHAL_Especialidad_detalle ON Servicios.IdEspecialidad=SIGHAL_Especialidad_detalle.idEspecialidad
-inner JOIN SIGHAL_Especialidad ON SIGHAL_Especialidad_detalle.id_esp=SIGHAL_Especialidad.id_esp
-where Atenciones.IdTipoServicio=?
-and cast(Atenciones.FechaIngreso as date)=cast(? as date)
-and Atenciones.idEstadoAtencion<>0
-order by SIGHAL_Especialidad.especialidad asc", [$request->IdTipoServicio, $request->fecha]);
+			$filas=DB::select("select distinct id_esp, especialidad
+from rs_v_atenciones_ce
+where cast(FechaIngreso as date)=cast(? as date)
+and IdTipoServicio=?
+Order by especialidad asc", [$request->fecha, $request->IdTipoServicio]);
 			if(count($filas)>0)
 			{
 				$datos=$filas;
@@ -29,6 +25,33 @@ order by SIGHAL_Especialidad.especialidad asc", [$request->IdTipoServicio, $requ
 			}
 			else
 				$mensaje="No existen atenciones para los datos ingresados";
+			return ['resultado'=>$resultado,"mensaje"=>$mensaje,"datos"=>$datos];
+		}
+		else
+		{
+			echo "get";
+		}
+	}
+	public function listar_servicios_x_fecha(Request $request)
+	{
+		if($request->method()=='POST')
+		{
+			$resultado=false;
+			$mensaje=null;
+			$datos=null;
+			$filas=DB::select("select distinct IdServicioIngreso, Servicio
+from rs_v_atenciones_ce
+where cast(FechaIngreso as date)=cast(? as date)
+and IdTipoServicio=?
+and id_esp=?
+Order by Servicio asc", [$request->fecha, $request->IdTipoServicio, $request->id_esp]);
+			if(count($filas)>0)
+			{
+				$datos=$filas;
+				$resultado=true;
+			}
+			else
+				$mensaje="No existen servicios para los datos ingresados";
 			return ['resultado'=>$resultado,"mensaje"=>$mensaje,"datos"=>$datos];
 		}
 		else

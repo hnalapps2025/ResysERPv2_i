@@ -181,7 +181,7 @@ class RS_Funciones
 		{
 			if($fila[$campo_buscar]==$valor_buscar)
 			{
-				$index=$key;
+				$index=$key;				
 				break;
 			}
 		}
