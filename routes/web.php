@@ -7,6 +7,7 @@ use App\Http\Controllers\ConsultaExternaController;
 use App\Http\Controllers\WSConsultaExternaController;
 use App\Http\Controllers\ArchivoClinicoController;
 use App\Http\Controllers\ReferenciasController;
+use App\Http\Controllers\ServicioController;
 
 Route::get('login', [LoginController::class, 'login'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
@@ -19,6 +20,8 @@ Route::get('ConsultaExterna/FUAMasivo',[ConsultaExternaController::class, 'FUAMa
 Route::post('ConsultaExterna/FUAMasivo',[ConsultaExternaController::class, 'FUAMasivo'])->middleware('auth:empleado');
 Route::get('ConsultaExterna/HISMasivo',[ConsultaExternaController::class, 'HISMasivo'])->middleware('auth:empleado');
 Route::post('ConsultaExterna/HISMasivo',[ConsultaExternaController::class, 'HISMasivo'])->middleware('auth:empleado');
+//Mantenimiento de Servicio
+Route::resource('servicios', ServicioController::class)->middleware('auth:empleado');
 //ConsultaExternaWS
 Route::post('WSConsultaExterna/FUAMasivo/buscar_especialidades_x_fecha',[WSConsultaExternaController::class, 'buscar_especialidades_x_fecha'])->middleware('auth:empleado');
 Route::post('WSConsultaExterna/HISMasivo/listar_servicios_x_fecha',[WSConsultaExternaController::class, 'listar_servicios_x_fecha'])->middleware('auth:empleado');
@@ -31,6 +34,8 @@ Route::get('ArchivoClinico/RetornoHistoria',[ArchivoClinicoController::class, 'R
 Route::post('ArchivoClinico/RetornoHistoria',[ArchivoClinicoController::class, 'RetornoHistoria'])->middleware('auth:empleado');
 Route::get('ArchivoClinico/NoDevueltasXServicio',[ArchivoClinicoController::class, 'NoDevueltasXServicio'])->middleware('auth:empleado');
 Route::post('ArchivoClinico/NoDevueltasXServicio',[ArchivoClinicoController::class, 'NoDevueltasXServicio'])->middleware('auth:empleado');
+Route::get('ArchivoClinico/NoDevueltasXFechas',[ArchivoClinicoController::class, 'NoDevueltasXFechas'])->middleware('auth:empleado');
+Route::post('ArchivoClinico/NoDevueltasXFechas',[ArchivoClinicoController::class, 'NoDevueltasXFechas'])->middleware('auth:empleado');
 Route::get('ArchivoClinico/NoDevueltasXSerie',[ArchivoClinicoController::class, 'NoDevueltasXSerie'])->middleware('auth:empleado');
 Route::post('ArchivoClinico/NoDevueltasXSerie',[ArchivoClinicoController::class, 'NoDevueltasXSerie'])->middleware('auth:empleado');
 Route::get('ArchivoClinico/NoDevueltasXRuta',[ArchivoClinicoController::class, 'NoDevueltasXRuta'])->middleware('auth:empleado');

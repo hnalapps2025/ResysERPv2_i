@@ -2,7 +2,7 @@
 
 {{-- Page title --}}
 @section('title')
-    No Devueltas X Servicio
+    No Devueltas X Fechas
     @parent
 @stop
 {{-- page level styles --}}
@@ -46,12 +46,13 @@
 <h4>{{$errors->first()}}</h4>
 @endif
 	<div class="form-group">
-	<h1>No Devueltas por Servicio</h1>
+	<h1>No Devueltas por Fecha</h1>
 		{{ html()->form('POST')->open() }}
 		<div class="form-group row m-12">
-			{{html()->label('Consultorio','id_esp')->class(['form-check-label col-lg-3'])}}
-			{{html()->select('id_esp',$Especialidades,'')->required()->class(['form-control col-lg-6'])}}			
-			<input type="submit" name="guardar" id="guardar" value="Buscar" class="form-control btn btn-primary col-lg-3"/>
+			{{html()->label('Rango Fecha','FechaIni')->class(['form-check-label col-lg-3'])}}
+			{{html()->date('FechaIni','')->required()->class(['form-control col-lg-3'])}}
+			{{html()->date('FechaFin','')->required()->class(['form-control col-lg-3'])}}
+            <input type="submit" name="guardar" id="guardar" value="Buscar" class="form-control btn btn-primary col-lg-3"/>
         </div>
 		{{html()->form()->close()}}
 	</div>

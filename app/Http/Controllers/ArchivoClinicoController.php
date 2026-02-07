@@ -137,6 +137,56 @@ order by MovimientosHistoriaClinica.FechaMovimiento desc", [$filas[0]->IdPacient
 	}
 	public function NoDevueltasXServicio(Request $request)
 	{
+		$filas=DB::select("SELECT DISTINCT SIGHAL_Especialidad.id_esp, SIGHAL_Especialidad.especialidad
+FROM            v_rs_HistoriasNoDevueltas INNER JOIN
+                         Servicios ON v_rs_HistoriasNoDevueltas.IdServicioDestino = Servicios.IdServicio INNER JOIN
+                         SIGHAL_Especialidad_detalle ON Servicios.IdEspecialidad = SIGHAL_Especialidad_detalle.idEspecialidad INNER JOIN
+                         SIGHAL_Especialidad ON SIGHAL_Especialidad_detalle.id_esp = SIGHAL_Especialidad.id_esp
+ORDER BY SIGHAL_Especialidad.especialidad");
+			$Especialidades['']="Seleccione Consultorio";
+		foreach($filas as $fila)$Especialidades[$fila->id_esp]=$fila->especialidad;
+		if($request->method()=='POST')
+		{
+			$resultado=false;
+			$mensaje=null;
+			$datos=null;
+			$filas=DB::select("SELECT        v_rs_HistoriasNoDevueltas.IdMovimiento, v_rs_HistoriasNoDevueltas.FechaMovimiento, v_rs_HistoriasNoDevueltas.Observacion, 
+                         Pacientes.ApellidoPaterno + ' ' + Pacientes.ApellidoMaterno + ' ' + Pacientes.PrimerNombre AS Paciente, Servicios.Nombre AS Servicio, 
+                         Empleados.ApellidoPaterno + ' ' + Empleados.ApellidoMaterno + ' ' + Empleados.Nombres AS Solicitante, MotivosMovimientoHistoria.Descripcion AS Motivo,
+						 Pacientes.NroHistoriaClinica, cast(Atenciones.FechaIngreso as date) as FechaCita
+FROM            v_rs_HistoriasNoDevueltas INNER JOIN
+                         Pacientes ON v_rs_HistoriasNoDevueltas.IdPaciente = Pacientes.IdPaciente INNER JOIN
+                         Servicios ON v_rs_HistoriasNoDevueltas.IdServicioDestino = Servicios.IdServicio INNER JOIN
+                         MotivosMovimientoHistoria ON v_rs_HistoriasNoDevueltas.IdMotivo = MotivosMovimientoHistoria.IdMotivo LEFT OUTER JOIN
+                         Empleados ON v_rs_HistoriasNoDevueltas.IdEmpleadoRecepcion = Empleados.IdEmpleado LEFT OUTER JOIN
+						 Atenciones ON v_rs_HistoriasNoDevueltas.IdAtencion = Atenciones.IdAtencion INNER JOIN
+                         SIGHAL_Especialidad_detalle ON Servicios.IdEspecialidad = SIGHAL_Especialidad_detalle.idEspecialidad
+WHERE SIGHAL_Especialidad_detalle.id_esp=?
+ORDER BY Servicios.Nombre ASC", [$request->id_esp]);
+			if(count($filas)>0)
+			{
+				$datos=$filas;
+				$resultado=true;
+			}
+			else
+				$mensaje="No existen registros";
+			if($resultado)
+			{
+				return view('ArchivoClinico.NoDevueltasXServicio')
+					->with('Especialidades',$Especialidades)
+					->with("datos",$datos);
+			}
+			else
+				return Redirect::back()->withErrors([$mensaje]);
+		}
+		else
+		{			
+			return view('ArchivoClinico.NoDevueltasXServicio')
+				->with('Especialidades',$Especialidades);
+		}
+	}
+	public function NoDevueltasXFechas(Request $request)
+	{
 		if($request->method()=='POST')
 		{
 			$resultado=false;
@@ -163,14 +213,14 @@ ORDER BY Servicios.Nombre ASC", [$request->FechaIni,$request->FechaFin]);
 				$mensaje="No existen registros";
 			if($resultado)
 			{
-				return view('ArchivoClinico.NoDevueltasXServicio')
+				return view('ArchivoClinico.NoDevueltasXFechas')
 					->with("datos",$datos);
 			}
 			else
 				return Redirect::back()->withErrors([$mensaje]);
 		}
 		else
-			return view('ArchivoClinico.NoDevueltasXServicio');
+			return view('ArchivoClinico.NoDevueltasXFechas');
 	}
 	public function NoDevueltasXSerie(Request $request)
 	{

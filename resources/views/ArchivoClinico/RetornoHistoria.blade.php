@@ -80,7 +80,7 @@
 		</table>
 		<div class="form-group row m-12">
 			{{html()->label('Observacion','Observacion')->class(['col-lg-2'])}}
-			{{html()->text('Observacion','')->placeholder('Observacion')->class(['form-control col-lg-10'])}}
+			{{html()->textarea('Observacion','')->required()->placeholder('Observacion')->class(['form-control col-lg-10'])}}
 		</div>
 		<div class="form-group row m-12">
 			<input type="submit" name="accion" id="Retornar" value="Retornar" class="form-control btn btn-success col-lg-12"/>

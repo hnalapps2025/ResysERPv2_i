@@ -407,6 +407,12 @@
                                     &nbsp;FUA Masivo
                                 </a>
                             </li>
+							<li>
+                                <a href="{{asset('/servicios')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Servicios Cupos Web
+                                </a>
+                            </li>
                         </ul>
 					</li>
 					<li class="dropdown_menu">
@@ -438,6 +444,12 @@
                                 <a href="{{asset('ArchivoClinico/NoDevueltasXServicio')}}">
                                     <i class="fa fa-stethoscope"></i>
                                     &nbsp;HC No Devueltas X Servicio
+                                </a>
+                            </li>
+							<li>
+                                <a href="{{asset('ArchivoClinico/NoDevueltasXFechas')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;HC No Devueltas X Fechas
                                 </a>
                             </li>
 							<li>
