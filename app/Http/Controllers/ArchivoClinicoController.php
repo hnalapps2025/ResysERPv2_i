@@ -143,7 +143,7 @@ FROM            v_rs_HistoriasNoDevueltas INNER JOIN
                          SIGHAL_Especialidad_detalle ON Servicios.IdEspecialidad = SIGHAL_Especialidad_detalle.idEspecialidad INNER JOIN
                          SIGHAL_Especialidad ON SIGHAL_Especialidad_detalle.id_esp = SIGHAL_Especialidad.id_esp
 ORDER BY SIGHAL_Especialidad.especialidad");
-			$Especialidades['']="Seleccione Consultorio";
+		$Especialidades['']="Seleccione Consultorio";
 		foreach($filas as $fila)$Especialidades[$fila->id_esp]=$fila->especialidad;
 		if($request->method()=='POST')
 		{

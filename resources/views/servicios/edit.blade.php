@@ -86,11 +86,12 @@
 
 <!--Page level scripts-->
 <script type="text/javascript">
-const chk = document.querySelector('input[name="AceptaCupoWebChk"]');
+	const chk = document.querySelector('input[name="AceptaCupoWebChk"]');
     const cupos = document.getElementById('cupos');
 
     function toggleCupos() {
         cupos.style.display = chk.checked ? 'block' : 'none';
+		document.querySelector('input[type="hidden"][name="AceptaCupoWeb"]').value=chk.checked?1:0;
     }
 
     chk.addEventListener('change', toggleCupos);
