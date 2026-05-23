@@ -476,6 +476,18 @@
                                     &nbsp;Reporte Hospitalizados
                                 </a>
                             </li>
+							<li>
+                                <a href="{{asset('ArchivoClinico/Rutas')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Rutas Conserjes
+                                </a>
+                            </li>
+							<li>
+                                <a href="{{asset('ArchivoClinico/MantenimientoRutas')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Rutas Servicios
+                                </a>
+                            </li>
                         </ul>
 					</li>
                 </ul>

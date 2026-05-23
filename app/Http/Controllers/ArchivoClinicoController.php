@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\RS_ArchivoClinico;
 use \PDO;
 use rivcar\jqgrid\jqGridRender;
+use rivcar\jqgrid\jqGridUtils;
 use rivcar\jqGrid\DBdrivers\jqGridDB;
 
 class ArchivoClinicoController extends Controller
@@ -473,5 +474,224 @@ and a.IdTipoServicio in (3)";
 			return view("general_grid")
 				->with('grid',$grid->renderGrid('#grid','#pager',true, null, null, true,true,$val))
 				->with('titulo','Reporte Hospitalizados');
+    }
+	public function MantenimientoRutas(Request $request)
+    {   
+		$val=$request->oper=='grid'||$request->oper=='excel'?true:false;
+		$conn =DB::connection()->getPdo();
+		$grid = new jqGridRender($conn);
+		$grid->SelectCommand = "SELECT        IdServicio, Nombre, ISNULL
+                             ((SELECT        COUNT(ArchivoRutaServicio.IdRuta)
+                                 FROM            ArchivoRutaServicio INNER JOIN
+                                                          ArchivoRuta ON ArchivoRutaServicio.IdRuta = ArchivoRuta.IdRuta
+                                 WHERE        (ArchivoRutaServicio.estado = 1) AND (ArchivoRutaServicio.IdServicio = Servicios.IdServicio) AND (ArchivoRuta.estado = 1) AND (ArchivoRuta.IdTipoTurnoRef = 1)), 0) AS ruta_m, ISNULL
+                             ((SELECT        COUNT(ArchivoRutaServicio.IdRuta)
+                                 FROM            ArchivoRutaServicio INNER JOIN
+                                                          ArchivoRuta ON ArchivoRutaServicio.IdRuta = ArchivoRuta.IdRuta
+                                 WHERE        (ArchivoRutaServicio.estado = 1) AND (ArchivoRutaServicio.IdServicio = Servicios.IdServicio) AND (ArchivoRuta.estado = 1) AND (ArchivoRuta.IdTipoTurnoRef = 2)), 0) AS ruta_t
+FROM            Servicios
+WHERE        (idEstado = 1)";
+		// set the ouput format to json
+		$grid->dataType = 'json';
+		$grid->setColModel();
+		$grid->gSQLMaxRows=100000;
+		// Set the url from where we obtain the data
+		//$grid->setUrl('r_hospitalizados');
+		$grid->setGridOptions(array(
+			"caption"=>"Servicios - Rutas",
+			"rowNum"=>20,
+			"sortname"=>"IdServicio",
+			"hoverrows"=>true,
+			"autowidth"=>true,
+			"rowList"=>array(10,20,50),
+			"height"=>"auto",
+			"sortorder"=>"asc"
+		));
+		$token = csrf_token();
+		$grid->addCol(array(
+			"name"=>"_token",
+			"label"=>"_token",
+			"hidden"=>true,
+			"formatter"=>"js:function(cellvalue, options, rowObject) { return '$token'; }"
+		));
+		// Enable filter toolbar searching
+		$grid->toolbarfilter = true;
+		$grid->setSubGridGrid("MantenimientoRutasServicios",["_token"]);
+		// navigator first should be enabled
+		$grid->navigator = true;
+		$grid->setNavOptions('navigator', array("pdf"=>true,"excel"=>true,"add"=>false,"edit"=>false,"del"=>false,"view"=>false, "search"=>false));
+		$conn = null;
+		// Enjoy
+		if($val)
+			$grid->renderGrid('#grid','#pager',true, null, null, true,true,$val);
+		else
+			return view("general_grid")
+				->with('grid',$grid->renderGrid('#grid','#pager',true, null, null, true,true,$val))
+				->with('titulo','Servicios - Rutas');
+    }
+	public function MantenimientoRutasServicios(Request $request)
+    {   
+		$val=$request->oper=='grid'||$request->oper=='excel'?true:false;
+		$rowid = jqGridUtils::Strip($request->rowid);
+		$conn =DB::connection()->getPdo();
+		$grid = new jqGridRender($conn);
+		$grid->SelectCommand = "SELECT        IdRutaServicio, IdRuta, IdServicio, grupo, estado
+FROM            ArchivoRutaServicio
+WHERE        (IdServicio = ?)";
+		$grid->table='ArchivoRutaServicio';
+		$grid->setPrimaryKeyId("IdRutaServicio");
+		// set the ouput format to json
+		$grid->dataType = 'json';
+		$grid->setColModel(null,array(&$rowid));
+		$grid->gSQLMaxRows=100000;
+		// Set the url from where we obtain the data
+		$grid->setUrl('MantenimientoRutasServicios');
+		$grid->setSelect('IdRuta',"SELECT IdRuta, Nombre FROM ArchivoRuta",true,true, true,array(""=>"Todos"));
+		$grid->setSelect('estado',array(1=>"Activo",2=>"Inactivo"),true,true, true,array(""=>"Todos"));
+		$grid->setGridOptions(array(
+			"caption"=>"Servicios - Rutas",
+			"rowNum"=>20,
+			"sortname"=>"IdServicio",
+			"hoverrows"=>true,
+			"autowidth"=>true,
+			"rowList"=>array(10,20,50),
+			"height"=>"auto",
+			"sortorder"=>"asc",
+			"postData"=>array(
+				"rowid"=>$rowid
+			)
+		));
+		$token = csrf_token();
+		$grid->addCol(array(
+			"name"=>"_token",
+			"label"=>"_token",
+			"hidden"=>true,
+			"formatter"=>"js:function(cellvalue, options, rowObject) { return '$token'; }",
+			"defaultValue"=>$token
+		));
+		$grid->setColProperty("IdServicio",array("hidden"=>true,"editoptions"=>array("defaultValue"=>$rowid)));
+		$grid->setColProperty("IdRutaServicio",array("hidden"=>true));
+		$grid->setColProperty("IdRuta",array("editrules"=>array("required"=>true)));
+		$grid->setColProperty("grupo",array("label"=>"Grupo","editrules"=>array("required"=>true)));
+		$grid->setColProperty("estado",array("label"=>"Estado","editrules"=>array("required"=>true)));
+		$grid->navigator = true;
+		$grid->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>false,"view"=>false));
+		$conn = null;
+		// Enjoy
+		if($val)
+			$grid->renderGrid("#grid".$rowid,"#pager".$rowid, true, null, array(&$rowid), true,true);
+		else
+			return $grid->renderGrid("#grid".$rowid,"#pager".$rowid, true, null, array(&$rowid), true,true);
+    }
+	public function Rutas(Request $request)
+    {   
+		$val=$request->oper=='grid'||$request->oper=='excel'?true:false;
+		$conn =DB::connection()->getPdo();
+		$grid = new jqGridRender($conn);
+		$grid->SelectCommand ="SELECT * FROM ArchivoRuta";
+		$grid->table='ArchivoRuta';
+		$grid->setPrimaryKeyId("IdRuta");
+		$grid->serialKey =true;
+		// set the ouput format to json
+		$grid->dataType = 'json';
+		$grid->setColModel();
+		$grid->gSQLMaxRows=100000;
+		// Set the url from where we obtain the data
+		$grid->setUrl('Rutas');
+		$grid->setSelect('IdTipoTurnoRef',array("1"=>"Mañana","2"=>"Tarde"),true,true, true,array(""=>"Todos"));
+		$grid->setSelect('estado',array("1"=>"Activo","2"=>"Inactivo"),true,true, true,array(""=>"Todos"));
+		$grid->setGridOptions(array(
+			"caption"=>"Rutas",
+			"rowNum"=>20,
+			"sortname"=>"IdRuta",
+			"hoverrows"=>true,
+			"autowidth"=>true,
+			"rowList"=>array(10,20,50),
+			"height"=>"auto",
+			"sortorder"=>"asc"
+		));
+		$token = csrf_token();
+		$grid->addCol(array(
+			"name"=>"_token",
+			"label"=>"_token",
+			"hidden"=>true,
+			"formatter"=>"js:function(cellvalue, options, rowObject) { return '$token'; }"
+		));
+		// Enable filter toolbar searching
+		$grid->toolbarfilter = true;
+		$grid->setSubGridGrid("RutasConserje",["_token"]);
+		// navigator first should be enabled
+		$grid->navigator = true;
+		$dobleclick= <<<DC
+function(rowid,iRow,iCol,e)
+{
+   window.location="mant_ruta.php?IdRuta="+rowid+"&tipo_mant=2";
+}
+DC;
+$grid->setGridEvent('ondblClickRow',$dobleclick);
+$grid->setColProperty('IdRuta',array("label"=>"Codigo","editable"=>false));
+$grid->setColProperty('IdTipoTurnoRef',array("label"=>"Turno"));
+		$grid->setNavOptions('navigator', array("pdf"=>true,"excel"=>true,"add"=>true,"edit"=>true,"del"=>false,"view"=>false, "search"=>false));
+		$conn = null;
+		// Enjoy
+		if($val)
+			$grid->renderGrid('#grid','#pager',true, null, null, true,true,$val);
+		else
+			return view("general_grid")
+				->with('grid',$grid->renderGrid('#grid','#pager',true, null, null, true,true,$val))
+				->with('titulo','Rutas');
+    }
+	public function RutasConserje(Request $request)
+    {   
+		$val=$request->oper=='grid'||$request->oper=='excel'?true:false;
+		$rowid = jqGridUtils::Strip($request->rowid);
+		$conn =DB::connection()->getPdo();
+		$grid = new jqGridRender($conn);
+		$grid->SelectCommand = "SELECT IdRutaConserje, IdRuta, IdEmpleado, estado
+		FROM ArchivoRutaConserje
+		WHERE IdRuta= ?";
+		$grid->table='ArchivoRutaConserje';
+		$grid->setPrimaryKeyId("IdRutaConserje");
+		// set the ouput format to json
+		$grid->dataType = 'json';
+		$grid->setColModel(null,array(&$rowid));
+		$grid->gSQLMaxRows=100000;
+		// Set the url from where we obtain the data
+		$grid->setUrl('RutasConserje');
+		$grid->setSelect('IdEmpleado',"SELECT IdEmpleado, ApellidoPaterno + ' ' + ApellidoMaterno + ' ' + Nombres AS Empleado FROM Empleados ORDER BY Empleado",true,true, true,array(""=>"Todos"));
+$grid->setSelect('estado',array("1"=>"Activo","2"=>"Inactivo"),true,true, true,array(""=>"Todos"));
+		$grid->setGridOptions(array(
+			"caption"=>"Ruta Conserje",
+			"rowNum"=>20,
+			"sortname"=>"IdRutaConserje",
+			"hoverrows"=>true,
+			"autowidth"=>true,
+			"rowList"=>array(10,20,50),
+			"height"=>"auto",
+			"sortorder"=>"asc",
+			"postData"=>array(
+				"rowid"=>$rowid
+			)
+		));
+		$token = csrf_token();
+		$grid->addCol(array(
+			"name"=>"_token",
+			"label"=>"_token",
+			"hidden"=>true,
+			"formatter"=>"js:function(cellvalue, options, rowObject) { return '$token'; }",
+			"defaultValue"=>$token
+		));
+		$grid->setColProperty('IdRutaConserje',array("hidden"=>true));
+$grid->setColProperty('IdRuta',array("hidden"=>true,"editoptions"=>array("defaultValue"=>$rowid)));
+$grid->setColProperty('IdEmpleado',array("label"=>"Empleado","editrules"=>array("required"=>true)));
+$grid->setColProperty('estado',array("label"=>"Estado","editrules"=>array("required"=>true)));
+		$grid->navigator = true;
+		$grid->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>false,"view"=>false));
+		$conn = null;
+		// Enjoy
+		if($val)
+			$grid->renderGrid("#grid".$rowid,"#pager".$rowid, true, null, array(&$rowid), true,true);
+		else
+			return $grid->renderGrid("#grid".$rowid,"#pager".$rowid, true, null, array(&$rowid), true,true);
     }
 }

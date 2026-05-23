@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\DB;
 
 class RS_Referencia
 {
-	public static $username="44856543";
-	public static $password="MarcoA1234@@";
+	public static $username="08133810";
+	public static $password="Leslie%12345";
 	public static function ObtenerCookiePrincipalRefcon($username,$password)
 	{
 		$validador=false;
@@ -385,14 +385,14 @@ class RS_Referencia
 					);
 					if($xJson['rpta']==1)
 					{
-						$CambiarEstadoRefrencia=self::CambiarEstadoRefrencia($CookiePrincipalRefcon,$referencia['idreferencia'],8);
-						if($CambiarEstadoRefrencia['resultado'])
+						$CambiarEstadoReferencia=self::CambiarEstadoReferencia($CookiePrincipalRefcon,$referencia['idreferencia'],8);
+						if($CambiarEstadoReferencia['resultado'])
 						{
-							$datos=$CambiarEstadoRefrencia['datos'];
+							$datos=$CambiarEstadoReferencia['datos'];
 							$resultado=true;
 						}
 						else
-							$mensaje=$CambiarEstadoRefrencia['mensaje'];
+							$mensaje=$CambiarEstadoReferencia['mensaje'];
 					}
 					else
 						$mensaje=$xJson['msj'];
@@ -407,7 +407,7 @@ class RS_Referencia
 			$mensaje=$PaginaCookie['mensaje'];
 		return ['resultado'=>$resultado,'mensaje'=>$mensaje,'datos'=>$datos];
     }
-	public static function CambiarEstadoRefrencia($CookiePrincipalRefcon,$idreferencia,$fgestado)
+	public static function CambiarEstadoReferencia($CookiePrincipalRefcon,$idreferencia,$fgestado)
     {
         $resultado=false;
 		$mensaje=null;
