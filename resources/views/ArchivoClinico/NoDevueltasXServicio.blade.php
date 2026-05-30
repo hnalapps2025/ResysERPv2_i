@@ -49,9 +49,12 @@
 	<h1>No Devueltas por Servicio</h1>
 		{{ html()->form('POST')->open() }}
 		<div class="form-group row m-12">
-			{{html()->label('Consultorio','id_esp')->class(['form-check-label col-lg-3'])}}
-			{{html()->select('id_esp',$Especialidades,'')->required()->class(['form-control col-lg-6'])}}			
-			<input type="submit" name="guardar" id="guardar" value="Buscar" class="form-control btn btn-primary col-lg-3"/>
+			{{html()->label('Rango Fecha','FechaIni')->class(['form-check-label col-lg-1'])}}
+			{{html()->date('FechaIni','')->required()->class(['form-control col-lg-2'])}}
+			{{html()->date('FechaFin','')->required()->class(['form-control col-lg-2'])}}
+			{{html()->label('Consultorio','id_esp')->class(['form-check-label col-lg-1'])}}
+			{{html()->select('id_esp',$Especialidades,'')->required()->class(['form-control col-lg-4'])}}			
+			<input type="submit" name="guardar" id="guardar" value="Buscar" class="form-control btn btn-primary col-lg-2"/>
         </div>
 		{{html()->form()->close()}}
 	</div>

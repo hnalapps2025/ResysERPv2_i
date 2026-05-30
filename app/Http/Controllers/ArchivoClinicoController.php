@@ -163,7 +163,8 @@ FROM            v_rs_HistoriasNoDevueltas INNER JOIN
 						 Atenciones ON v_rs_HistoriasNoDevueltas.IdAtencion = Atenciones.IdAtencion INNER JOIN
                          SIGHAL_Especialidad_detalle ON Servicios.IdEspecialidad = SIGHAL_Especialidad_detalle.idEspecialidad
 WHERE SIGHAL_Especialidad_detalle.id_esp=?
-ORDER BY Servicios.Nombre ASC", [$request->id_esp]);
+AND CAST(v_rs_HistoriasNoDevueltas.FechaMovimiento AS date) BETWEEN ? AND ?
+ORDER BY v_rs_HistoriasNoDevueltas.FechaMovimiento ASC", [$request->id_esp,$request->FechaIni,$request->FechaFin]);
 			if(count($filas)>0)
 			{
 				$datos=$filas;
@@ -204,7 +205,7 @@ FROM            v_rs_HistoriasNoDevueltas INNER JOIN
                          Empleados ON v_rs_HistoriasNoDevueltas.IdEmpleadoRecepcion = Empleados.IdEmpleado LEFT OUTER JOIN
 						 Atenciones ON v_rs_HistoriasNoDevueltas.IdAtencion = Atenciones.IdAtencion
 WHERE CAST(v_rs_HistoriasNoDevueltas.FechaMovimiento AS date) between ? and ?
-ORDER BY Servicios.Nombre ASC", [$request->FechaIni,$request->FechaFin]);
+ORDER BY v_rs_HistoriasNoDevueltas.FechaMovimiento ASC", [$request->FechaIni,$request->FechaFin]);
 			if(count($filas)>0)
 			{
 				$datos=$filas;
@@ -337,7 +338,7 @@ FROM            Citas INNER JOIN
 WHERE        (Atenciones.idEstadoAtencion <> 0) AND (ArchivoRutaServicio.estado = 1) AND (ArchivoRuta.IdTipoTurnoRef = Turnos.IdTipoTurnoRef) AND (ArchivoRuta.estado = 1) AND (CONVERT(DATE,Citas.Fecha) = CONVERT(DATE,'$fecha')) AND (RIGHT(Pacientes.NroHistoriaClinica,2) BETWEEN $rini AND $rfin)";
 if($turno!=0)
 	$query=$query." AND (Turnos.IdTipoTurnoRef = $turno)";
-if($rechequeo==1)
+if($rechequeo=='on')
 	$query=$query." AND ((SELECT        count(*)
 FROM            MovimientosHistoriaClinica
 WHERE        (IdMotivo = 1) AND (IdAtencion = Citas.IdAtencion)) = 0)";
