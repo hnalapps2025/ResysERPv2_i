@@ -9,7 +9,11 @@
 @section('header_styles')
     <!--Plugin styles-->
     <!--Page level styles-->
-    <link type="text/css" rel="stylesheet" href="{{asset('assets/css/pages/form_elements.css')}}"/>	
+    <link type="text/css" rel="stylesheet" href="{{asset('assets/css/pages/form_elements.css')}}"/>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 	<style>
     body {
       font-family: Arial, sans-serif;
@@ -63,7 +67,7 @@
 	<input type="button" value="Imprimir" class="form-control btn btn-success" onclick="imprimir()"/>
 </div>
 <div id='imprimir'>
-	<table border="1" width="100%">
+	<table border="1" width="100%" id="tablaHistorias">
 	  <thead>
 		<tr>
 		  <th>HC</th>
@@ -97,6 +101,13 @@
 
 <!--Page level scripts-->
 <script type="text/javascript">
+$(document).ready(function() {
+    $('#tablaHistorias').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json'
+        }
+    });
+});
 function imprimir()
 {
 	const contenido = document.getElementById('imprimir').innerHTML;
