@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 
 class RS_His
 {
+	public static $url_envio_his='http://dpidesalud.minsa.gob.pe:18080/mcs-sihce-hisminsa/integracion/v1.0/paquete/actualizar';
 	public static function ObtenerDatosHisMasivo($fecha,$IdTipoServicio,$id_esp,$servicios)
 	{
 		$resultado=false;

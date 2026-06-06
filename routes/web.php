@@ -8,6 +8,7 @@ use App\Http\Controllers\WSConsultaExternaController;
 use App\Http\Controllers\ArchivoClinicoController;
 use App\Http\Controllers\ReferenciasController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\HisController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -59,3 +60,5 @@ Route::get('Referencias/Refcon/indicador_mensual',[ReferenciasController::class,
 Route::post('Referencias/Refcon/indicador_mensual',[ReferenciasController::class, 'indicador_mensual'])->middleware('auth:empleado');
 Route::get('Referencias/contrareferir',[ReferenciasController::class, 'contrareferir'])->middleware('auth:empleado');
 Route::post('Referencias/contrareferir',[ReferenciasController::class, 'contrareferir'])->middleware('auth:empleado');
+//EnviarHis
+Route::get('HIS/enviar_atencion/{IdAtencion}',[HisController::class, 'enviar_atencion'])->middleware('auth:empleado');
