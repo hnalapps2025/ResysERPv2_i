@@ -431,7 +431,7 @@ FROM            v_rs_hositalizados";
 		$grid->dataType = 'json';
 		$grid->setColModel();
 		$grid->gSQLMaxRows=100000;
-		$grid->setSelect('EstadoHistoria',[0=>'Pendiente',1=>'Entregado']);
+		$grid->setSelect('EstadoHistoria',[0=>'Pendiente',1=>'Entregado'],true,true, true,array(""=>"Todos"));
 		// Set the url from where we obtain the data
 		//$grid->setUrl('r_hospitalizados');
 		$grid->setGridOptions(array(
