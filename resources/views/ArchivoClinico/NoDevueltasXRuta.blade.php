@@ -72,8 +72,10 @@
 		  <th>Paciente</th>
 		  <th>Servicio</th>
 		  <th>Solicitante</th>
+		  <td>Motivo</td>
 		  <th>Observacion</th>
 		  <th>Fecha Movimiento</th>
+		  <th>Fecha Cita</th>
 		</tr>
 	  </thead>
 	  <tbody>
@@ -83,8 +85,10 @@
 		  <td>{{$Movimiento->Paciente}}</td>
 		  <td>{{$Movimiento->Servicio}}</td>
 		  <td>{{$Movimiento->Solicitante}}</td>
+		  <td>{{$Movimiento->Motivo}}</td>
 		  <td>{{$Movimiento->Observacion}}</td>
 		  <td>{{date("d/m/Y", strtotime($Movimiento->FechaMovimiento))}}</td>
+		  <td>{{ $Movimiento->FechaCita ? date("d/m/Y", strtotime($Movimiento->FechaCita)) : '' }}</td>
 		</tr>
 		@endforeach
 	  </tbody>
@@ -99,7 +103,8 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $('#tablaHistorias').DataTable({
-        language: {
+        pageLength: 1000,
+		language: {
             url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json'
         }
     });

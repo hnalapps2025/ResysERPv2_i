@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use App\RS_Referencia;
 use App\RS_Funciones;
+use App\RS_His;
 use \PDO;
 use rivcar\jqgrid\jqGridRender;
 use rivcar\jqGrid\DBdrivers\jqGridDB;
@@ -19,17 +20,22 @@ class HisController extends Controller
 		}
 		else
 		{
-			/*$data=array(
-				"paciente"=>$paciente[0],
-				"personal_atiende"=>$personal_atiende[0],
-				"personal_registra"=>$personal_atiende[0],
-				"cita"=>$cita[0]
-			);*/
-			$PostFields=[];
-			$HttpHeader=[
-				'Content-Type: application/json'
-			];
-			return RS_Funciones::LeerPagina(RSHis::$url_envio_his,'POST',$PostFields,$HttpHeader);
+			$resultado=false;
+			$mensaje=null;
+			$datos=null;
+			$ObtenerDatosAtencionHis=RS_His::ObtenerDatosAtencionHis($request->IdAtencion);
+			if($ObtenerDatosAtencionHis['resultado'])
+			{
+				$PostFields=$ObtenerDatosAtencionHis['datos'];
+				$HttpHeader=[
+					'Content-Type: application/json'
+				];
+				$datos=RS_Funciones::LeerPagina(RS_His::$url_envio_his,'POST',$PostFields,$HttpHeader);
+				$resultado=true;
+			}
+			else
+				$mensaje=$ObtenerDatosAtencionHis['mensaje'];
+			return ['resultado'=>$resultado,'mensaje'=>$mensaje,'datos'=>$datos];
 		}
 	}
 }

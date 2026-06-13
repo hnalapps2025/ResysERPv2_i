@@ -234,12 +234,13 @@ ORDER BY v_rs_HistoriasNoDevueltas.FechaMovimiento ASC", [$request->FechaIni,$re
 			$filas=DB::select("SELECT        v_rs_HistoriasNoDevueltas.IdMovimiento, v_rs_HistoriasNoDevueltas.FechaMovimiento, v_rs_HistoriasNoDevueltas.Observacion, 
                          Pacientes.ApellidoPaterno + ' ' + Pacientes.ApellidoMaterno + ' ' + Pacientes.PrimerNombre AS Paciente, Servicios.Nombre AS Servicio, 
                          Empleados.ApellidoPaterno + ' ' + Empleados.ApellidoMaterno + ' ' + Empleados.Nombres AS Solicitante, MotivosMovimientoHistoria.Descripcion AS Motivo,
-						 Pacientes.NroHistoriaClinica
+						 Pacientes.NroHistoriaClinica, Citas.Fecha as FechaCita
 FROM            v_rs_HistoriasNoDevueltas INNER JOIN
                          Pacientes ON v_rs_HistoriasNoDevueltas.IdPaciente = Pacientes.IdPaciente INNER JOIN
                          Servicios ON v_rs_HistoriasNoDevueltas.IdServicioDestino = Servicios.IdServicio INNER JOIN
                          MotivosMovimientoHistoria ON v_rs_HistoriasNoDevueltas.IdMotivo = MotivosMovimientoHistoria.IdMotivo LEFT OUTER JOIN
-                         Empleados ON v_rs_HistoriasNoDevueltas.IdEmpleadoRecepcion = Empleados.IdEmpleado
+                         Empleados ON v_rs_HistoriasNoDevueltas.IdEmpleadoRecepcion = Empleados.IdEmpleado LEFT OUTER JOIN
+						 Citas ON v_rs_HistoriasNoDevueltas.IdAtencion = Citas.IdAtencion
 WHERE CAST(v_rs_HistoriasNoDevueltas.FechaMovimiento AS date) between ? and ?
 and RIGHT(Pacientes.NroHistoriaClinica, 2) between ? and ?
 ORDER BY RIGHT(Pacientes.NroHistoriaClinica, 2) ASC, NroHistoriaClinica ASC", [$request->FechaIni,$request->FechaFin,$request->SerieIni,$request->SerieFin]);
@@ -271,12 +272,13 @@ ORDER BY RIGHT(Pacientes.NroHistoriaClinica, 2) ASC, NroHistoriaClinica ASC", [$
 			$filas=DB::select("SELECT        v_rs_HistoriasNoDevueltas.IdMovimiento, v_rs_HistoriasNoDevueltas.FechaMovimiento, v_rs_HistoriasNoDevueltas.Observacion, 
                          Pacientes.ApellidoPaterno + ' ' + Pacientes.ApellidoMaterno + ' ' + Pacientes.PrimerNombre AS Paciente, Servicios.Nombre AS Servicio, 
                          Empleados.ApellidoPaterno + ' ' + Empleados.ApellidoMaterno + ' ' + Empleados.Nombres AS Solicitante, MotivosMovimientoHistoria.Descripcion AS Motivo,
-						 Pacientes.NroHistoriaClinica
+						 Pacientes.NroHistoriaClinica, Citas.Fecha as FechaCita
 FROM            v_rs_HistoriasNoDevueltas INNER JOIN
                          Pacientes ON v_rs_HistoriasNoDevueltas.IdPaciente = Pacientes.IdPaciente INNER JOIN
                          Servicios ON v_rs_HistoriasNoDevueltas.IdServicioDestino = Servicios.IdServicio INNER JOIN
                          MotivosMovimientoHistoria ON v_rs_HistoriasNoDevueltas.IdMotivo = MotivosMovimientoHistoria.IdMotivo LEFT OUTER JOIN
-                         Empleados ON v_rs_HistoriasNoDevueltas.IdEmpleadoRecepcion = Empleados.IdEmpleado
+                         Empleados ON v_rs_HistoriasNoDevueltas.IdEmpleadoRecepcion = Empleados.IdEmpleado LEFT OUTER JOIN
+						 Citas ON v_rs_HistoriasNoDevueltas.IdAtencion = Citas.IdAtencion
 WHERE CAST(v_rs_HistoriasNoDevueltas.FechaMovimiento AS date)=?
 and v_rs_HistoriasNoDevueltas.IdServicioDestino in(select IdServicio from ArchivoRutaServicio where estado=1 and IdRuta=?)
 ORDER BY RIGHT(Pacientes.NroHistoriaClinica, 2) ASC, NroHistoriaClinica ASC", [$request->Fecha,$request->IdRuta]);
@@ -423,33 +425,13 @@ WHERE mhc.IdServicio  = (SELECT TOP 1 IdServicio from Servicios where nombre='SI
 		$val=$request->oper=='grid'||$request->oper=='excel'?true:false;
 		$conn =DB::connection()->getPdo();
 		$grid = new jqGridRender($conn);
-		$grid->SelectCommand = "select  a.IdCuentaAtencion [Cuenta], convert(date,FechaIngreso) as FechaIngreso,  P.ApellidoPaterno AS [Apellido Paterno], P.ApellidoMaterno AS [Apellido Materno], P.PrimerNombre AS [Primer Nombre], 
-	p.NroHistoriaClinica , p.NroDocumento as DNI,s.Nombre Servicio, c.Codigo as CAMA
-from atenciones a
-inner join AtencionesEstanciaHospitalaria aeh on a.IdAtencion=aeh.IdAtencion
-left join AtencionesDatosAdicionales ad on a.IdAtencion = ad.idAtencion
-inner join pacientes p on a.IdPaciente = p.IdPaciente
-left join Camas c on aeh.IdCama = c.IdCama
-left join servicios s on aeh.IdServicio = s.IdServicio
-where a.idEstadoAtencion !=0 and aeh.Secuencia = (select top 1 secuencia from AtencionesEstanciaHospitalaria ae where ae.IdAtencion = a.IdAtencion order by Secuencia desc)
-and (FechaEgresoAdministrativo is null and HoraEgresoAdministrativo is null and FechaEgreso is null)
-and a.IdTipoServicio in (3)
-union
-select  a.IdCuentaAtencion [Cuenta], convert(date,FechaIngreso) as FechaIngreso,  P.ApellidoPaterno AS [Apellido Paterno], P.ApellidoMaterno AS [Apellido Materno], P.PrimerNombre AS [Primer Nombre], 
-	p.NroHistoriaClinica, p.NroDocumento as DNI,s.Nombre Servicio, c.Codigo as CAMA
-from atenciones a
-inner join AtencionesEstanciaHospitalaria aeh on a.IdAtencion=aeh.IdAtencion
-left join AtencionesDatosAdicionales ad on a.IdAtencion = ad.idAtencion
-inner join pacientes p on a.IdPaciente = p.IdPaciente
-left join Camas c on aeh.IdCama = c.IdCama
-left join servicios s on aeh.IdServicio = s.IdServicio
-where a.idEstadoAtencion !=0 and aeh.Secuencia = (select top 1 secuencia from AtencionesEstanciaHospitalaria ae where ae.IdAtencion = a.IdAtencion order by Secuencia desc)
-and (FechaEgreso is null and IdTipoAlta is null and FechaEgresoAdministrativo is null)
-and a.IdTipoServicio in (3)";
+		$grid->SelectCommand = "SELECT        IdCuentaAtencion as Cuenta, convert(date,FechaIngreso) as FechaIngreso, ApellidoPaterno, ApellidoMaterno, PrimerNombre, NroHistoriaClinica, NroDocumento, Servicio, Cama, EstadoHistoria
+FROM            v_rs_hositalizados";
 		// set the ouput format to json
 		$grid->dataType = 'json';
 		$grid->setColModel();
 		$grid->gSQLMaxRows=100000;
+		$grid->setSelect('EstadoHistoria',[0=>'Pendiente',1=>'Entregado']);
 		// Set the url from where we obtain the data
 		//$grid->setUrl('r_hospitalizados');
 		$grid->setGridOptions(array(
@@ -464,6 +446,14 @@ and a.IdTipoServicio in (3)";
 		));
 		// Enable filter toolbar searching
 		$grid->toolbarfilter = true;
+		$grid->setColProperty('EstadoHistoria', array(
+    'formatter' => 'js:function(cellvalue, options, rowObject) {
+        if (cellvalue == 1) {
+            return "<span style=\"background:#28a745;color:#fff;padding:3px 8px;border-radius:4px;\">Entregado</span>";
+        }
+        return "<span style=\"background:#dc3545;color:#fff;padding:3px 8px;border-radius:4px;\">Pendiente</span>";
+    }'
+));
 		// navigator first should be enabled
 		$grid->navigator = true;
 		$grid->setNavOptions('navigator', array("add"=>false,"edit"=>false,"del"=>false,"excel"=>true,"pdf"=>true,"view"=>false));

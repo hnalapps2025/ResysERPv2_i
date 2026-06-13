@@ -61,4 +61,33 @@ and IdTipoServicio=?";
 		$resultado=true;
 		return ['resultado'=>$resultado,'mensaje'=>$mensaje,'datos'=>$datos];
 	}
+	public static function ObtenerDatosAtencionHis($IdAtencion)
+	{
+		$resultado=false;
+		$mensaje=null;
+		$datos=[];
+		$atencion=DB::select("SELECT        Atenciones.IdMedicoIngreso, CASE WHEN len(Pacientes.NroDocumento) = 0 THEN '5' ELSE Pacientes.IdDocIdentidad END AS idtipodoc, CASE WHEN len(Pacientes.NroDocumento) = 0 THEN '1' ELSE Pacientes.NroDocumento END AS nrodocumento,
+										Pacientes.ApellidoPaterno as apepaterno, Pacientes.ApellidoMaterno as apematerno, Pacientes.PrimerNombre as nombres, 
+										CONVERT(varchar(8),Pacientes.FechaNacimiento,112) as fechanacimiento, Pacientes.NroHistoriaClinica as nrohistoriaclinica, case Pacientes.IdTipoSexo when 1 then 'M' else 'F' end as idsexo, 
+										ISNULL(Paises.Codigo, 'PER') AS idpais, rtrim(ltrim(ISNULL(HIS_tabetnia.codhis, '58'))) AS idetnia,5 AS idflag,6207 as idestablecimiento,Atenciones.idEstadoAtencion, isnull(AtencionesRevisionHIS.Estado,1) as Estado
+	FROM            Atenciones INNER JOIN
+							 Pacientes on Atenciones.IdPaciente = Pacientes.IdPaciente LEFT OUTER JOIN
+							 Paises ON Pacientes.IdPaisNacimiento = Paises.IdPais LEFT OUTER JOIN
+							 HIS_tabetnia ON Pacientes.IdEtnia = HIS_tabetnia.codetni INNER JOIN
+						 AtencionesRevisionHIS ON Atenciones.IdAtencion = AtencionesRevisionHIS.IdAtencion
+	WHERE        (Atenciones.IdAtencion=?)",[$IdAtencion]);
+		$cont=count($atencion);
+		if($cont==1)
+		{
+			$data=[
+				"paciente"=>$atencion[0]
+			];
+			$resultado=true;
+		}
+		elseif($cont==0)
+			$mensaje="No existe registros";
+		else
+			$mensaje="Duplicidad de registros";
+		return ['resultado'=>$resultado,'mensaje'=>$mensaje,'datos'=>$datos];
+	}
 }
