@@ -42,6 +42,7 @@ class RS_ArchivoClinico
 							if($GenerarRegistroMovimientosHistoriaClinica['resultado'])
 							{
 								DB::update("Update HistoriasSolicitadas set IdMovimiento=?, estado=5 where IdHistoriaSolicitada=?",[$GenerarRegistroMovimientosHistoriaClinica['datos'],$BuscarSolicitudHistoria['datos']->IdHistoriaSolicitada]);
+								$datos=['IdMovimientoHistoria'=>$GenerarRegistroMovimientosHistoriaClinica['datos'],'Servicio'=>$BuscarSolicitudHistoria['datos']->Servicio];
 								$resultado=true;
 							}
 							else
@@ -111,9 +112,11 @@ class RS_ArchivoClinico
 		$datos=null;
 		$filas=DB::select("SELECT        HistoriasSolicitadas.IdHistoriaSolicitada, HistoriasSolicitadas.IdPaciente,
                          HistoriasSolicitadas.FechaSolicitud, HistoriasSolicitadas.HoraSolicitud, HistoriasSolicitadas.FechaRequerida, HistoriasSolicitadas.HoraRequerida, HistoriasSolicitadas.IdMotivo, 
-                         HistoriasSolicitadas.IdServicio, HistoriasSolicitadas.IdAtencion, HistoriasSolicitadas.IdEmpleadoSolicita, isnull(HistoriasSolicitadas.estado,1) as estado
+                         HistoriasSolicitadas.IdServicio, HistoriasSolicitadas.IdAtencion, HistoriasSolicitadas.IdEmpleadoSolicita, isnull(HistoriasSolicitadas.estado,1) as estado,
+						 Servicios.Nombre as Servicio
 FROM            HistoriasSolicitadas
                          INNER JOIN Pacientes ON HistoriasSolicitadas.IdPaciente = Pacientes.IdPaciente
+						 INNER JOIN Servicios ON HistoriasSolicitadas.IdServicio = Servicios.IdServicio
 WHERE        (Pacientes.NroHistoriaClinica =?) AND (CAST(HistoriasSolicitadas.FechaRequerida AS date) =cast(? as date)) AND (ISNULL(HistoriasSolicitadas.estado_registro,1)=1)
 ORDER BY FechaRequerida ASC, HoraRequerida ASC",[$NroHistoriaClinica,$fecha]);
 		if(count($filas)>0)

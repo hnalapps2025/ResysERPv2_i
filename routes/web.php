@@ -55,6 +55,10 @@ Route::get('ArchivoClinico/Rutas',[ArchivoClinicoController::class, 'Rutas'])->m
 Route::post('ArchivoClinico/Rutas',[ArchivoClinicoController::class, 'Rutas'])->middleware('auth:empleado');
 Route::get('ArchivoClinico/RutasConserje',[ArchivoClinicoController::class, 'RutasConserje'])->middleware('auth:empleado');
 Route::post('ArchivoClinico/RutasConserje',[ArchivoClinicoController::class, 'RutasConserje'])->middleware('auth:empleado');
+Route::get('ArchivoClinico/ReporteConserjeriaUbicados',[ArchivoClinicoController::class, 'ReporteConserjeriaUbicados'])->middleware('auth:empleado');
+Route::post('ArchivoClinico/ReporteConserjeriaUbicados',[ArchivoClinicoController::class, 'ReporteConserjeriaUbicados'])->middleware('auth:empleado');
+Route::get('ArchivoClinico/ReporteConserjeriaConsultorio',[ArchivoClinicoController::class, 'ReporteConserjeriaConsultorio'])->middleware('auth:empleado');
+Route::post('ArchivoClinico/ReporteConserjeriaConsultorio',[ArchivoClinicoController::class, 'ReporteConserjeriaConsultorio'])->middleware('auth:empleado');
 //Referencias
 Route::get('Referencias/Refcon/indicador_mensual',[ReferenciasController::class, 'indicador_mensual'])->middleware('auth:empleado');
 Route::post('Referencias/Refcon/indicador_mensual',[ReferenciasController::class, 'indicador_mensual'])->middleware('auth:empleado');

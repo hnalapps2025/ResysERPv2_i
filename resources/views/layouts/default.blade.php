@@ -488,6 +488,18 @@
                                     &nbsp;Rutas Servicios
                                 </a>
                             </li>
+							<li>
+                                <a href="{{asset('ArchivoClinico/ReporteConserjeriaUbicados')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Reporte Conserjeria Ubicados
+                                </a>
+                            </li>
+							<li>
+                                <a href="{{asset('ArchivoClinico/ReporteConserjeriaConsultorio')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Reporte Conserjeria Consultorio
+                                </a>
+                            </li>
                         </ul>
 					</li>
                 </ul>
