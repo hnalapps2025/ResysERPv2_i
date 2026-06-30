@@ -1156,4 +1156,35 @@ WHERE        (Atenciones.idEstadoAtencion <> 0) AND (ArchivoRuta.estado=1) AND (
 			));
 		}
 	}
+	public function SalidaExternaHistoria(Request $request)
+	{
+		if($request->method()=='POST')
+		{
+			$resultado=false;
+			$mensaje=null;
+			$datos=null;
+			$SalidaHistoriaClinica=RS_ArchivoClinico::SalidaExternaHistoriaClinica($request->IdPaciente,$request->IdServicio,$request->IdMotivo,date('Ymd H:i:s'),$request->Observacion,auth()->user()->IdEmpleado,$request->IdConserje,$request->IdEmpleadoSolicita);
+			if($SalidaHistoriaClinica['resultado'])
+			{
+				$datos=$SalidaHistoriaClinica['datos'];
+				$resultado=true;
+			}
+			else
+			{
+				$mensaje=$SalidaHistoriaClinica['mensaje'];
+				$datos=$SalidaHistoriaClinica['datos'];
+			}
+			if($resultado)
+				return view('ArchivoClinico.SalidaExternaHistoria')
+					->with("mensaje","Historia Clinica a Destino: ".$datos['Servicio']);
+			else
+				return view('ArchivoClinico.SalidaExternaHistoria')
+					->with("error",$mensaje)
+					->with("datos",$datos);
+		}
+		else
+		{
+			return view('ArchivoClinico.SalidaExternaHistoria');
+		}
+	}
 }

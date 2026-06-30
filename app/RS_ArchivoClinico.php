@@ -278,4 +278,78 @@ WHERE        (ArchivoRutaConserje.estado = 1) AND (ArchivoRuta.estado = 1) AND (
 			$rutas[$Ruta->IdRuta]=$Ruta->Nombre;
 		return $rutas;
 	}
+	public static function SalidaExternaHistoriaClinica($IdPaciente,$IdServicio,$IdMotivo,$FechaMovimiento,$Observacion,$IdEmpleadoArchivo,$IdConserje,$IdEmpleadoSolicita)
+	{
+		$resultado=false;
+		$mensaje=null;
+		$datos=null;
+		$UbicacionActualHistoria=self::UbicacionActualHistoria($IdPaciente);
+		if($UbicacionActualHistoria['resultado'])
+		{
+			if($UbicacionActualHistoria['datos']->IdServicioDestino==self::$IdServicioArchivoClinico)
+			{
+				$BuscarDatosServicio=self::BuscarDatosServicio($IdServicio);
+				if($BuscarDatosServicio['resultado'])
+				{
+					$ObtenerIdGrupoMovimiento=self::ObtenerIdGrupoMovimiento($IdConserje,$IdServicio);
+					if($ObtenerIdGrupoMovimiento['resultado'])
+					{
+						$GenerarRegistroMovimientosHistoriaClinica=self::GenerarRegistroMovimientosHistoriaClinica(
+							$IdPaciente
+							,$FechaMovimiento
+							,$IdMotivo
+							,$Observacion
+							,self::$IdServicioArchivoClinico
+							,$IdServicio
+							,$IdEmpleadoArchivo
+							,$IdConserje
+							,$IdEmpleadoSolicita
+							,$ObtenerIdGrupoMovimiento['datos']->IdGrupoMovimiento
+							,null);
+						if($GenerarRegistroMovimientosHistoriaClinica['resultado'])
+						{
+							$datos=['IdMovimientoHistoria'=>$GenerarRegistroMovimientosHistoriaClinica['datos'],'Servicio'=>$BuscarDatosServicio['datos']->Servicio];
+							$resultado=true;
+						}
+						else
+							$mensaje=$GenerarRegistroMovimientosHistoriaClinica['mensaje'];
+					}
+					else
+						$mensaje=$ObtenerIdGrupoMovimiento['mensaje'];
+				}
+				else
+					$mensaje=$BuscarDatosServicio['mensaje'];
+			}
+			else
+			{
+				$mensaje="La historia clinica esta en el servicio: ".$UbicacionActualHistoria['datos']->Servicio;
+				$datos=$UbicacionActualHistoria['datos'];
+			}
+		}
+		else
+			$mensaje=$UbicacionActualHistoria['mensaje'];
+		return ['resultado'=>$resultado,'mensaje'=>$mensaje,'datos'=>$datos];
+	}
+	public static function BuscarDatosServicio($IdServicio)
+	{
+		$resultado=false;
+		$mensaje=null;
+		$datos=null;
+		$filas=DB::select("SELECT Nombre as Servicio, IdEstado FROM Servicio where IdServicio=?",[$IdServicio]);
+		if(count($filas)==1)
+		{
+			if($filas[0]->IdEstado==1)
+			{
+				$datos=$filas[0];
+				$resultado=true;
+			}
+			else
+				$mensaje="El servicio está inactivo";
+		}
+		elseif(count($filas)>1)
+			$mensaje="Duplicidad de registros";
+		else
+			$mensaje="No existe registro";
+		return ['resultado'=>$resultado,'mensaje'=>$mensaje,'datos'=>$datos];
+	}
 }

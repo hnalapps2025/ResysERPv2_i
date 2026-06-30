@@ -500,6 +500,12 @@
                                     &nbsp;Reporte Conserjeria Consultorio
                                 </a>
                             </li>
+							<li>
+                                <a href="{{asset('ArchivoClinico/SalidaExternaHistoria')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Salida Diferenciada
+                                </a>
+                            </li>
                         </ul>
 					</li>
                 </ul>
