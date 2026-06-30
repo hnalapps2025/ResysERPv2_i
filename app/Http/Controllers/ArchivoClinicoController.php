@@ -1184,7 +1184,52 @@ WHERE        (Atenciones.idEstadoAtencion <> 0) AND (ArchivoRuta.estado=1) AND (
 		}
 		else
 		{
-			return view('ArchivoClinico.SalidaExternaHistoria');
+			$servicios = DB::table('Servicios')
+				->where('idEstado', 1)
+				->orderBy('Nombre', 'asc')
+				->pluck('Nombre', 'IdServicio');
+			$motivos = DB::table('MotivosMovimientoHistoria')
+				->orderBy('Descripcion', 'asc')
+				->pluck('Descripcion', 'IdMotivo');
+			$conserjes = DB::table('ArchivoRutaConserje')
+				->join('Empleados', 'ArchivoRutaConserje.IdEmpleado', '=', 'Empleados.IdEmpleado')
+				->select(
+					'ArchivoRutaConserje.IdEmpleado',
+					DB::raw("Empleados.ApellidoPaterno + ' ' + Empleados.ApellidoMaterno + ' ' + Empleados.Nombres AS NombreCompleto")
+				)
+				->where('ArchivoRutaConserje.estado', 1)
+				->orderBy('Empleados.ApellidoPaterno')
+				->orderBy('Empleados.ApellidoMaterno')
+				->orderBy('Empleados.Nombres')
+				->pluck('NombreCompleto', 'IdEmpleado');
+			$empleados = DB::table('Empleados')
+				->select(
+					'IdEmpleado',
+					DB::raw("ApellidoPaterno + ' ' + ApellidoMaterno + ' ' + Nombres AS NombreCompleto")
+				)
+				->where('esActivo', 1)
+				->orderBy('ApellidoPaterno')
+				->orderBy('ApellidoMaterno')
+				->orderBy('Nombres')
+				->pluck('NombreCompleto', 'IdEmpleado');
+			return view('ArchivoClinico.SalidaExternaHistoria', compact('servicios','motivos','empleados','conserjes'));
 		}
+	}
+	public function BuscarPacienteSalidaHC(Request $request)
+	{
+		$resultado=false;
+		$mensaje=null;
+		$datos=null;
+		$filas=DB::select("Select IdPaciente, ApellidoPaterno, ApellidoMaterno, PrimerNombre from Pacientes where NroHistoriaClinica=?",[$request->NroHistoriaClinica]);
+		if(count($filas)==1)
+		{
+			$datos=$filas[0];
+			$resultado=true;
+		}
+		elseif(count($filas)>1)
+			$mensaje="Duplicidad de Registros";
+		else
+			$mensaje="Paciente no encontrado";
+		return['resultado'=>$resultado,"mensaje"=>$mensaje,"datos"=>$datos];
 	}
 }

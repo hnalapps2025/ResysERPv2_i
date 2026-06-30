@@ -21,8 +21,7 @@
 @isset($error))
 <h4 style="background-color: #ce0707; color: #fff8f8;">{{$error}}</h4>
 @endisset
-	<div class="container">
-
+<div class="container">
     <div class="card">
         <div class="card-header">
             <h4>Registro de Movimiento de Historia Clínica</h4>
@@ -30,81 +29,86 @@
 
         <div class="card-body">
 
-            {{ html()->form('POST', route('guardar_movimiento'))
-                ->id('frmMovimiento')
-                ->open() }}
+            {{ html()->form('POST')->id('frmMovimiento')->open() }}
+
+            {{ html()->hidden('IdPaciente')->id('IdPaciente') }}
 
             <div class="row">
 
-                <div class="col-md-4">
+                <div class="col-md-2">
                     {{ html()->label('Nro. Historia Clínica', 'NroHistoriaClinica') }}
 
                     {{ html()->text('NroHistoriaClinica')
                         ->class('form-control')
                         ->id('NroHistoriaClinica')
-                        ->placeholder('Ingrese N° Historia Clínica')
-                    }}
+                        ->placeholder('Ingrese N° Historia Clínica')->required() }}
                 </div>
 
                 <div class="col-md-2 d-flex align-items-end">
                     {{ html()->button('Buscar')
                         ->type('button')
                         ->class('btn btn-primary')
-                        ->id('btnBuscar')
-                    }}
+                        ->id('btnBuscar') }}
                 </div>
 
-            </div>
-
-            <hr>
-
-            {{ html()->hidden('IdPaciente')->id('IdPaciente') }}
-
-            <div class="row">
-
-                <div class="col-md-6">
+                <div class="col-md-8">
                     {{ html()->label('Paciente') }}
 
                     {{ html()->text('Paciente')
                         ->class('form-control')
                         ->id('Paciente')
-                        ->attribute('readonly', true)
-                    }}
+                        ->attribute('readonly', true) }}
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ html()->label('Servicio Destino', 'IdServicio') }}
+                    {{ html()->select('IdServicio', $servicios ?? [])->class('form-control')->placeholder('Seleccione...')->required() }}
                 </div>
 
-                <div class="col-md-3">
-                    {{ html()->label('DNI') }}
+                <div class="col-md-6">
+                    {{ html()->label('Motivo', 'IdMotivo') }}
 
-                    {{ html()->text('Dni')
+                    {{ html()->select('IdMotivo', $motivos ?? [])
                         ->class('form-control')
-                        ->id('Dni')
-                        ->attribute('readonly', true)
-                    }}
-                </div>
-
-                <div class="col-md-3">
-                    {{ html()->label('Fecha Nacimiento') }}
-
-                    {{ html()->text('FechaNacimiento')
-                        ->class('form-control')
-                        ->id('FechaNacimiento')
-                        ->attribute('readonly', true)
-                    }}
+                        ->placeholder('Seleccione...')->required() }}
                 </div>
 
             </div>
 
+            <br>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    {{ html()->label('Conserje', 'IdConserje') }}
+
+                    {{ html()->select('IdConserje', $conserjes ?? [])
+                        ->class('form-control')
+                        ->placeholder('Seleccione...')->required() }}
+                </div>
+
+                <div class="col-md-6">
+                    {{ html()->label('Empleado que Solicita', 'IdEmpleadoSolicita') }}
+
+                    {{ html()->select('IdEmpleadoSolicita', $empleados ?? [])
+                        ->class('form-control')
+                        ->placeholder('Seleccione...')->required() }}
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    {{ html()->label('Observación', 'Observacion') }}
+                    {{ html()->textarea('Observacion')->class('form-control')->rows(4)->placeholder('Ingrese una observación') }}
+                </div>
+            </div>
             <hr>
-
-            {{ html()->submit('Guardar Movimiento')
-                ->class('btn btn-success')
-            }}
-
+            {{ html()->submit('Guardar Movimiento')->id('btnGuardar')->class('btn btn-success')->attribute('disabled', true) }}
             {{ html()->form()->close() }}
-
         </div>
     </div>
-
 </div>
 @stop
 @section('footer_scripts')
@@ -113,41 +117,28 @@
 <!--Page level scripts-->
 <script type="text/javascript">
 $('#btnBuscar').on('click', function () {
-
-    let historia = $('#NroHistoriaClinica').val();
-
+    $('#btnGuardar').prop('disabled', true);
+	$('#Paciente').val('');
+	let historia = $('#NroHistoriaClinica').val();
     if (historia.trim() === '') {
         alert('Ingrese el número de historia clínica');
         return;
     }
-
     $.ajax({
-        url: '/archivoclinico/api/buscar_paciente_salida',
+        url: '/ArchivoClinico/api/BuscarPacienteSalidaHC',
         method: 'POST',
         data: {
             NroHistoriaClinica: historia,
             _token: '{{ csrf_token() }}'
         },
         success: function (response) {
-
-            if (response.success) {
-
-                $('#IdPaciente').val(response.data.IdPaciente);
-                $('#Paciente').val(response.data.Apellidos + ' ' + response.data.Nombres);
-                $('#Dni').val(response.data.Dni);
-                $('#FechaNacimiento').val(response.data.FechaNacimiento);
-
+            if (response.resultado) {
+                $('#IdPaciente').val(response.datos.IdPaciente);
+                $('#Paciente').val(response.datos.ApellidoPaterno + ' ' +response.datos.ApellidoMaterno+' '+ response.datos.PrimerNombre);
+				$('#btnGuardar').prop('disabled', false);
             } else {
-
-                $('#IdPaciente').val('');
-                $('#Paciente').val('');
-                $('#Dni').val('');
-                $('#FechaNacimiento').val('');
-
-                alert('Paciente no encontrado.');
-
+                alert(response.mensaje);
             }
-
         },
         error: function () {
             alert('Ocurrió un error al consultar la información.');

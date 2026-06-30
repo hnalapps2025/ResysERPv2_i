@@ -335,7 +335,7 @@ WHERE        (ArchivoRutaConserje.estado = 1) AND (ArchivoRuta.estado = 1) AND (
 		$resultado=false;
 		$mensaje=null;
 		$datos=null;
-		$filas=DB::select("SELECT Nombre as Servicio, IdEstado FROM Servicio where IdServicio=?",[$IdServicio]);
+		$filas=DB::select("SELECT Nombre as Servicio, IdEstado FROM Servicios where IdServicio=?",[$IdServicio]);
 		if(count($filas)==1)
 		{
 			if($filas[0]->IdEstado==1)

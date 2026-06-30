@@ -61,6 +61,7 @@ Route::get('ArchivoClinico/ReporteConserjeriaConsultorio',[ArchivoClinicoControl
 Route::post('ArchivoClinico/ReporteConserjeriaConsultorio',[ArchivoClinicoController::class, 'ReporteConserjeriaConsultorio'])->middleware('auth:empleado');
 Route::get('ArchivoClinico/SalidaExternaHistoria',[ArchivoClinicoController::class, 'SalidaExternaHistoria'])->middleware('auth:empleado');
 Route::post('ArchivoClinico/SalidaExternaHistoria',[ArchivoClinicoController::class, 'SalidaExternaHistoria'])->middleware('auth:empleado');
+Route::post('ArchivoClinico/api/BuscarPacienteSalidaHC',[ArchivoClinicoController::class, 'BuscarPacienteSalidaHC'])->middleware('auth:empleado');
 //Referencias
 Route::get('Referencias/Refcon/indicador_mensual',[ReferenciasController::class, 'indicador_mensual'])->middleware('auth:empleado');
 Route::post('Referencias/Refcon/indicador_mensual',[ReferenciasController::class, 'indicador_mensual'])->middleware('auth:empleado');
