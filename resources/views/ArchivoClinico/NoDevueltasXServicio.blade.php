@@ -38,28 +38,28 @@
 	<input type="button" value="Imprimir" class="form-control btn btn-success" onclick="imprimir()"/>
 </div>
 <div id='imprimir'>
-	<table border="1" width="100%" id="tablaHistorias">
+	<table border="1" width="100%" id="tablaHistorias" style="font-size:9px">
 	  <thead style="background-color: #4CAF50; color: white;">
 		<tr>
-		  <th width="8%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">HC</th>
-		  <th width="21%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Paciente</th>
-		  <th width="21%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Servicio</th>
-		  <th width="21%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Solicitante</th>
-		  <th width="13%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Observacion</th>
-		  <th width="8%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">F. Movimiento</th>
-		  <th width="8%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">F. Cita</th>
+		  <th>HC</th>
+		  <th>Paciente</th>
+		  <th>Servicio</th>
+		  <th>Solicitante</th>
+		  <th>Observacion</th>
+		  <th>F. Movimiento</th>
+		  <th>F. Cita</th>
 		</tr>
 	  </thead>
 	  <tbody>
 		@foreach($datos as $Movimiento)
 		<tr>
-		  <td width="8%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{$Movimiento->NroHistoriaClinica}}</td>
-		  <td width="21%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{$Movimiento->Paciente}}</td>
-		  <td width="21%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{$Movimiento->Servicio}}</td>
-		  <td width="21%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{$Movimiento->Solicitante}}</td>
-		  <td width="13%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{$Movimiento->Observacion}}</td>
-		  <td width="8%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{date("d/m/Y", strtotime($Movimiento->FechaMovimiento))}}</td>
-		  <td width="8%" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $Movimiento->FechaCita ? date("d/m/Y", strtotime($Movimiento->FechaCita)) : '' }}</td>
+		  <td>{{$Movimiento->NroHistoriaClinica}}</td>
+		  <td>{{$Movimiento->Paciente}}</td>
+		  <td>{{$Movimiento->Servicio}}</td>
+		  <td>{{$Movimiento->Solicitante}}</td>
+		  <td>{{$Movimiento->Observacion}}</td>
+		  <td>{{date("d/m/Y", strtotime($Movimiento->FechaMovimiento))}}</td>
+		  <td>{{ $Movimiento->FechaCita ? date("d/m/Y", strtotime($Movimiento->FechaCita)) : '' }}</td>
 		</tr>
 		@endforeach
 	  </tbody>
@@ -78,7 +78,16 @@ $(document).ready(function() {
             url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json'
         },
 		pageLength: 5000,
-		autoWidth: false
+		autoWidth: false,
+		columnDefs: [
+			{ width: "6%", targets: 0 },
+			{ width: "22%", targets: 1 },
+			{ width: "22%", targets: 2 },
+			{ width: "22%", targets: 3 },
+			{ width: "13%", targets: 4 },
+			{ width: "7%", targets: 5 },
+			{ width: "7%", targets: 6 }
+		]
     });
 });
 function imprimir()

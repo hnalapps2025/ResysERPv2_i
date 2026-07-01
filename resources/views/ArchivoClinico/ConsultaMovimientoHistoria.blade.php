@@ -87,7 +87,7 @@
 @stop
 @section('content')
 @if($errors->any())
-<h4>{{$errors->first()}}</h4>
+<h4 style="background-color: #ce0707; color: #fff8f8;">{{$errors->first()}}</h4>
 @endif
 	<div class="form-group">
 		{{ html()->form('POST')->open() }}
@@ -96,7 +96,7 @@
                 {{html()->label('NroHistoriaClinica','NroHistoriaClinica')->class(['form-check-label'])}}
 			</div>
 			<div class="col-lg-4">
-				{{html()->text('NroHistoriaClinica','')->required()->class(['form-control'])}}
+				{{html()->number('NroHistoriaClinica','')->attribute('min', '1')->attribute('step', '1')->required()->class(['form-control'])}}
 			</div>
             <div class="col-lg-4">
                 <input type="submit" name="guardar" id="guardar" value="Buscar" class="form-control btn btn-primary"/>
