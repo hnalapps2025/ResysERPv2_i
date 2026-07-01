@@ -366,7 +366,7 @@ Servicios ON mhc.IdServicio = Servicios.IdServicio left JOIN
 ArchivoRutaServicio ON Servicios.IdServicio = ArchivoRutaServicio.IdServicio left JOIN
 ArchivoRuta ON ArchivoRutaServicio.IdRuta = ArchivoRuta.IdRuta
 WHERE mhc.IdServicio  = (SELECT TOP 1 IdServicio from Servicios where nombre='SIS') and mhc.fecharequerida= CONVERT(DATE,'$fecha') AND (RIGHT(Pacientes.NroHistoriaClinica,2) BETWEEN $rini AND $rfin)";
-			$query="select * from (".$query.") as Tabla order by grupo, servicio, RIGHT(NroHistoriaClinica, 2)";
+			$query="select * from (".$query.") as Tabla order by grupo, RIGHT(NroHistoriaClinica, 2)";
 			$citados=DB::select($query);
 			$tabla_u='';
 			if(count($citados)>0)
