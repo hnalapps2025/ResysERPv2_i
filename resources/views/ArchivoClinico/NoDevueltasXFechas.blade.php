@@ -41,6 +41,7 @@
 	  <thead style="background-color: #4CAF50; color: white;">
 		<tr>
 		  <th>HC</th>
+		  <th>C</th>
 		  <th>Paciente</th>
 		  <th>Servicio</th>
 		  <th>Solicitante</th>
@@ -53,6 +54,7 @@
 		@foreach($datos as $Movimiento)
 		<tr>
 		  <td>{{$Movimiento->NroHistoriaClinica}}</td>
+		  <td>{{substr($Movimiento->NroHistoriaClinica, -2)}}</td>
 		  <td>{{$Movimiento->Paciente}}</td>
 		  <td>{{$Movimiento->Servicio}}</td>
 		  <td>{{$Movimiento->Solicitante}}</td>
@@ -80,12 +82,13 @@ $(document).ready(function() {
 		autoWidth: false,
 		columnDefs: [
 			{ width: "6%", targets: 0 },
-			{ width: "22%", targets: 1 },
+			{ width: "1%", targets: 1 },
 			{ width: "22%", targets: 2 },
 			{ width: "22%", targets: 3 },
-			{ width: "13%", targets: 4 },
-			{ width: "7%", targets: 5 },
-			{ width: "7%", targets: 6 }
+			{ width: "22%", targets: 4 },
+			{ width: "12%", targets: 5 },
+			{ width: "7%", targets: 6 },
+			{ width: "7%", targets: 7 }
 		]
     });
 });

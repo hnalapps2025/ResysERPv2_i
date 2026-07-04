@@ -1057,8 +1057,8 @@ FROM            Citas INNER JOIN
 						 FuentesFinanciamiento ON FuentesFinanciamiento.IdFuenteFinanciamiento = Atenciones.idFuenteFinanciamiento INNER JOIN
 						 ProgramacionMedica ON Citas.IdProgramacion = ProgramacionMedica.IdProgramacion INNER JOIN
 						 Turnos ON ProgramacionMedica.IdTurno = Turnos.IdTurno
-WHERE        (Atenciones.idEstadoAtencion <> 0) AND (ArchivoRuta.estado=1) AND (ArchivoRutaServicio.estado=1) AND (ArchivoRuta.IdTipoTurnoRef = Turnos.IdTipoTurnoRef) AND (ArchivoRutaServicio.grupo =?) AND (CONVERT(DATE, Citas.Fecha) = CONVERT(DATE,?)) AND (Citas.IdMedico =?) AND (Citas.IdServicio =?)";
-						$parametros=[$grupo,$fecha,$IdMedico,$IdServicio];
+WHERE        (Atenciones.idEstadoAtencion <> 0) AND (ArchivoRuta.estado=1) AND (ArchivoRutaServicio.estado=1) AND (ArchivoRuta.IdTipoTurnoRef = Turnos.IdTipoTurnoRef) AND (ArchivoRutaServicio.grupo =?) AND (CONVERT(DATE, Citas.Fecha) = CONVERT(DATE,?)) AND (Citas.IdMedico =?)";
+						$parametros=[$grupo,$fecha,$IdMedico];
 						if($request->turno!=0)
 						{
 							$query=$query." AND (Turnos.IdTipoTurnoRef =?)";
