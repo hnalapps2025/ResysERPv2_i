@@ -15,21 +15,23 @@ class LoginController extends Controller
 				'Usuario' => 'required|string',
 				'ClaveVWeb' => 'required|string',
 			]);
-
 			$empleado = Empleado::where('Usuario', $request->Usuario)->first();
-
 			if ($empleado && md5($request->ClaveVWeb) === $empleado->ClaveVWeb) {
 				Auth::guard('empleado')->login($empleado);
 				$request->session()->regenerate();
 				return redirect()->intended('/principal');
 			}
-
 			return back()->withErrors([
 				'Usuario' => 'Usuario o contraseña incorrectos',
 			])->onlyInput('Usuario');
 		}
 		else
-			return view('login');
+		{
+			if(Auth::guard('empleado')->check())
+				return redirect('/principal');
+			else
+				return view('login');
+		}
 	}
 
     public function logout(Request $request)

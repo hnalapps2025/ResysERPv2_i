@@ -9,6 +9,7 @@ use App\Http\Controllers\ArchivoClinicoController;
 use App\Http\Controllers\ReferenciasController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\HisController;
+use App\Http\Controllers\ServicioSocialController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -69,3 +70,12 @@ Route::get('Referencias/contrareferir',[ReferenciasController::class, 'contraref
 Route::post('Referencias/contrareferir',[ReferenciasController::class, 'contrareferir'])->middleware('auth:empleado');
 //EnviarHis
 Route::get('HIS/enviar_atencion/{IdAtencion}',[HisController::class, 'enviar_atencion'])->middleware('auth:empleado');
+//Servicio Social
+Route::get('ServicioSocial/listar_atenciones',[ServicioSocialController::class, 'listar_atenciones'])->middleware('auth:empleado');
+Route::get('ServicioSocial/crear_atencion_ss',[ServicioSocialController::class, 'crear_atencion_ss'])->middleware('auth:empleado');
+Route::post('ServicioSocial/crear_atencion_ss',[ServicioSocialController::class, 'crear_atencion_ss'])->middleware('auth:empleado');
+Route::post('ServicioSocial/buscar_paciente',[ServicioSocialController::class, 'buscar_paciente'])->middleware('auth:empleado');
+Route::get('ServicioSocial/FichaSocial/{IdCuentaAtencion}',[ServicioSocialController::class, 'FichaSocial'])->middleware('auth:empleado');
+Route::post('ServicioSocial/FichaSocial/{IdCuentaAtencion}',[ServicioSocialController::class, 'FichaSocial'])->middleware('auth:empleado');
+Route::get('ServicioSocial/his_diario',[ServicioSocialController::class, 'his_diario'])->middleware('auth:empleado');
+Route::post('ServicioSocial/his_diario',[ServicioSocialController::class, 'his_diario'])->middleware('auth:empleado');
