@@ -2,7 +2,7 @@
 
 {{-- Page title --}}
 @section('title')
-	{{$titulo}}
+	{{ $titulo ?? 'ResysERP' }}
     @parent
 @stop
 {{-- page level styles --}}

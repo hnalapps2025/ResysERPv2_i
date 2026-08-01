@@ -89,8 +89,8 @@ class RS_Referencia
 		{
 			$parametros['C']='REFERENCIA';
 			$parametros['S']='INGRESANTES';			
-			if(!array_search('limit',$parametros))$parametros["limit"]=50000;
-			if(!array_search('start',$parametros))$parametros["start"]=0;
+			if(!isset($parametros['limit']))$parametros["limit"]=500;
+			if(!isset($parametros['start']))$parametros["start"]=0;
 						
 			$Cookie=$CookiePrincipalRefcon['pagina'][0];
 			preg_match_all('/^Set-Cookie:\s*([^;]*)/mi',$Cookie,$Cookies);
@@ -429,7 +429,6 @@ class RS_Referencia
 				{
 					$datos=$pagina1;
 					$resultado=true;
-					//dd($pagina1);
 				}
 				else
 					$mensaje=$pagina1[1];

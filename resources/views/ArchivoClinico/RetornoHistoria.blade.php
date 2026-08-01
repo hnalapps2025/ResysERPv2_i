@@ -49,7 +49,7 @@
 		{{ html()->form('POST')->open() }}
 		<div class="form-group row m-12">
 			{{html()->label('N° Historia','NroHistoria')->class(['col-lg-2'])}}
-			{{html()->text('NroHistoria',isset($datos)?$datos->NroHistoriaClinica:'')->required()->class(['form-control col-lg-4'])}}
+			{{html()->text('NroHistoria',isset($datos)?$datos->NroHistoriaClinica:'')->attribute('autofocus', true)->required()->class(['form-control col-lg-4'])}}
 			<input type="submit" name="accion" id="Buscar" value="Buscar" class="form-control btn btn-primary col-lg-6"/>
 		</div>
 		@isset($datos)

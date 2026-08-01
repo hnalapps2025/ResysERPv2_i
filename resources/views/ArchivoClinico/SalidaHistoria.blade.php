@@ -15,22 +15,22 @@
 	</style>
 @stop
 @section('content')
-@isset($mensaje))
+@isset($mensaje)
 <h4 style="background-color: #43ca06;">{{$mensaje}}</h4>
 @endisset
-@isset($error))
-<h4 style="background-color: #ce0707; color: #fff8f8;">{{$error}}</h4>
-@endisset
+@if($errors->any())
+<div class="alert alert-danger">{{ $errors->first() }}</div>
+@endif
 	<h3>Salida de Historia</h3>
 	<div class="form-group">
 		{{ html()->form('POST')->open() }}
 		<div class="form-group row m-12">
 			{{html()->label('Fecha Solicitada','Fecha')->class(['col-lg-2'])}}
-			{{html()->date('Fecha','')->required()->class(['form-control col-lg-2'])}}
+			{{ html()->date('Fecha', '')->required()->class(['form-control col-lg-2']) }}
 			{{html()->label('Turno','Turno')->class(['col-lg-1'])}}
 			{{html()->select('Turno',[1=>'Mañana',2=>'Tarde'],1)->required()->class(['form-control col-lg-1'])}}
 			{{html()->label('N° Historia','NroHistoria')->class(['col-lg-2'])}}
-			{{html()->text('NroHistoria','')->required()->class(['form-control col-lg-2'])}}
+			{{html()->text('NroHistoria','')->attribute('autofocus', true)->required()->class(['form-control col-lg-2'])}}
 			{{html()->text('Observacion','')->placeholder('Observacion')->class(['form-control col-lg-2'])}}
 		</div>
 		<div class="form-group row m-12">
@@ -72,7 +72,7 @@
 		</table>
 		<div class="form-group row m-12">
 			{{html()->label('Observacion','Observacion')->class(['col-lg-2'])}}
-			{{html()->text('Observacion','')->placeholder('Observacion')->class(['form-control col-lg-10'])}}
+			{{html()->text('Observacion','')->attribute('autofocus', true)->placeholder('Observacion')->class(['form-control col-lg-10'])}}
 		</div>
 		<div class="form-group row m-12">
 			<input type="submit" name="accion" id="Retornar" value="Retornar" class="form-control btn btn-success col-lg-12"/>

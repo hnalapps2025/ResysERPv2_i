@@ -508,6 +508,45 @@
                             </li>
                         </ul>
 					</li>
+					<li class="dropdown_menu">
+                        <a href="javascript:;">
+                            <i class="fa fa-stethoscope fa-lg text-center ml-1" style="width: 20px" aria-hidden="true"></i>
+                            <span class="link-title menu_hide">HIS</span>
+                            <span class="fa arrow menu_hide"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="{{asset('/HIS/servicios_his')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Servicios HIS
+                                </a>
+                            </li>
+							<li>
+                                <a href="{{asset('/HIS/r_his_ce')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Pendientes Revision
+                                </a>
+                            </li>
+							<li>
+                                <a href="{{asset('/HIS/r_his_ce_aprobados')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Aprobados
+                                </a>
+                            </li>
+							<li>
+                                <a href="{{asset('/HIS/r_his_ce_observados')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Observados
+                                </a>
+                            </li>
+							<li>
+                                <a href="{{asset('/HIS/r_his_ce_enviados')}}">
+                                    <i class="fa fa-stethoscope"></i>
+                                    &nbsp;Enviados
+                                </a>
+                            </li>
+                        </ul>
+					</li>
                 </ul>
                 <!-- /#menu -->
             </div>

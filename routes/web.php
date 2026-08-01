@@ -69,6 +69,15 @@ Route::post('Referencias/Refcon/indicador_mensual',[ReferenciasController::class
 Route::get('Referencias/contrareferir',[ReferenciasController::class, 'contrareferir'])->middleware('auth:empleado');
 Route::post('Referencias/contrareferir',[ReferenciasController::class, 'contrareferir'])->middleware('auth:empleado');
 //EnviarHis
+Route::get('HIS/servicios_his',[HisController::class, 'servicios_his'])->middleware('auth:empleado');
+Route::post('HIS/servicios_his',[HisController::class, 'servicios_his'])->middleware('auth:empleado');
+Route::get('HIS/r_his_ce',[HisController::class, 'r_his_ce'])->middleware('auth:empleado');
+Route::get('HIS/r_his_ce_aprobados',[HisController::class, 'r_his_ce_aprobados'])->middleware('auth:empleado');
+Route::get('HIS/r_his_ce_observados',[HisController::class, 'r_his_ce_observados'])->middleware('auth:empleado');
+Route::get('HIS/r_his_ce_enviados',[HisController::class, 'r_his_ce_enviados'])->middleware('auth:empleado');
+Route::get('HIS/actualiza_estado_his',[HisController::class, 'actualiza_estado_his'])->middleware('auth:empleado');
+Route::get('HIS/atencion_detalle_his',[HisController::class, 'atencion_detalle_his'])->middleware('auth:empleado');
+Route::post('HIS/atencion_detalle_his',[HisController::class, 'atencion_detalle_his'])->middleware('auth:empleado');
 Route::get('HIS/enviar_atencion/{IdAtencion}',[HisController::class, 'enviar_atencion'])->middleware('auth:empleado');
 //Servicio Social
 Route::get('ServicioSocial/listar_atenciones',[ServicioSocialController::class, 'listar_atenciones'])->middleware('auth:empleado');

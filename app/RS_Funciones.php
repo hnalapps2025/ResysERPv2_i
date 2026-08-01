@@ -10,6 +10,13 @@ class RS_Funciones
 {
 	public static function LeerPagina($url,$tipo,$PostFields,$HttpHeader,$agent='')
 	{
+		$contentType = '';
+		foreach ($HttpHeader as $header) {
+			if (stripos($header, 'Content-Type:') === 0) {
+				$contentType = trim(substr($header, strlen('Content-Type:')));
+				break;
+			}
+		}
 		$curl=curl_init();
 		curl_setopt_array($curl, array(
 		  CURLOPT_URL =>$url,
@@ -22,7 +29,7 @@ class RS_Funciones
 		  CURLOPT_SSL_VERIFYPEER=>false
 		));
 		if($agent!="")curl_setopt($curl, CURLOPT_USERAGENT, $agent);
-		if($tipo=='POST'&&count($PostFields)>0) curl_setopt($curl,CURLOPT_POSTFIELDS,http_build_query($PostFields));
+		if($tipo=='POST'&&count($PostFields)>0) curl_setopt($curl,CURLOPT_POSTFIELDS,$contentType === 'application/json'?json_encode($PostFields, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES):http_build_query($PostFields));
 		if(count($HttpHeader)>0)curl_setopt($curl,CURLOPT_HTTPHEADER,$HttpHeader);		
 		$response =mb_convert_encoding(curl_exec($curl), "UTF-8", "Windows-1252");
 		$header_size = curl_getinfo($curl,CURLINFO_HEADER_SIZE);
@@ -224,5 +231,11 @@ class RS_Funciones
 		if($fecha && (int)$fecha->format("m")===(int)$mesBuscado && (int)$fecha->format("Y") === (int)$anioBuscado)
 			$resultado=true;
 		return $resultado;
+	}
+	public static function retornar_httpCode($header)
+	{
+		preg_match('/HTTP\/\d\.\d\s+(\d+)/', $header, $matches);
+		$httpCode = $matches[1] ?? null;
+		return $httpCode;
 	}
 }
