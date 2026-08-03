@@ -72,7 +72,8 @@ order by MovimientosHistoriaClinica.FechaMovimiento desc", [$filas[0]->IdPacient
 				$datos=$SalidaHistoriaClinica['datos'];
 			}
 			if($resultado)
-				return view('ArchivoClinico.SalidaHistoria')
+				return Redirect::back()
+					->withInput($request->except('NroHistoria','Observacion'))
 					->with("mensaje","Historia Clinica a Destino: ".$datos['Servicio']);
 			else
 			{
