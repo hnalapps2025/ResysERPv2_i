@@ -17,6 +17,8 @@ Route::get('/', function () {
 Route::get('login', [LoginController::class, 'login'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('cambiar_contrasena',[LoginController::class, 'cambiar_contrasena'])->middleware('auth:empleado');
+Route::post('cambiar_contrasena',[LoginController::class, 'cambiar_contrasena'])->middleware('auth:empleado');
 
 // Ruta protegida solo para empleados autenticados
 Route::get('principal',[LoginController::class, 'principal'])->middleware('auth:empleado');
@@ -79,6 +81,7 @@ Route::get('HIS/actualiza_estado_his',[HisController::class, 'actualiza_estado_h
 Route::get('HIS/atencion_detalle_his',[HisController::class, 'atencion_detalle_his'])->middleware('auth:empleado');
 Route::post('HIS/atencion_detalle_his',[HisController::class, 'atencion_detalle_his'])->middleware('auth:empleado');
 Route::get('HIS/enviar_atencion/{IdAtencion}',[HisController::class, 'enviar_atencion'])->middleware('auth:empleado');
+Route::post('HIS/envio_masivo',[HisController::class, 'envio_masivo'])->middleware('auth:empleado');
 //Servicio Social
 Route::get('ServicioSocial/listar_atenciones',[ServicioSocialController::class, 'listar_atenciones'])->middleware('auth:empleado');
 Route::get('ServicioSocial/crear_atencion_ss',[ServicioSocialController::class, 'crear_atencion_ss'])->middleware('auth:empleado');

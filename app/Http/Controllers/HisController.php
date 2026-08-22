@@ -182,21 +182,24 @@ WHERE        (FactOrdenServicio.IdCuentaAtencion =(select IdCuentaAtencion from 
 	}
 	public function actualiza_estado_his(Request $request)
 	{
-		$tsql = "exec rs_AtencionesRevisionHIS ?,?,?,?,?,?,?,?";
-		$resultado = '';
-		$mensaje = '';
-		$IdAtencionRevisionHIS = '';
-		$getReviews = DB::connection()->getPdo()->prepare($tsql);
-		$getReviews->bindValue(1, $request->IdAtencion, PDO::PARAM_STR);
-		$getReviews->bindValue(2, $request->Estado, PDO::PARAM_STR);
-		$getReviews->bindValue(3, $request->Observacion, PDO::PARAM_STR);
-		$getReviews->bindValue(4, date('Ymd H:i:s'), PDO::PARAM_STR);
-		$getReviews->bindValue(5, auth()->user()->IdEmpleado, PDO::PARAM_STR);
-		$getReviews->bindParam(6, $resultado, PDO::PARAM_STR, 1);
-		$getReviews->bindParam(7, $mensaje, PDO::PARAM_STR, 150);
-		$getReviews->bindParam(8, $IdAtencionRevisionHIS, PDO::PARAM_STR, 50);
-		if (!$getReviews->execute())	$mensaje = $getReviews->errorInfo()[2];
-		return ['resultado' => $resultado, 'mensaje' => $mensaje, 'IdAtencionRevisionHIS' => $IdAtencionRevisionHIS];
+		$resultado=false;
+		$mensaje=null;
+		$IdAtencionRevisionHIS=null;
+		$actualiza_estado_his=RS_His::actualiza_estado_his(
+			$request->IdAtencion
+			,$request->Estado
+			,$request->Observacion
+			,date('Ymd H:i:s')
+			,auth()->user()->IdEmpleado
+		);
+		if($actualiza_estado_his['resultado'])
+		{
+			$IdAtencionRevisionHIS=$actualiza_estado_his['IdAtencionRevisionHIS'];
+			$resultado=true;
+		}
+		else
+			$mensaje=$actualiza_estado_his['mensaje'];
+		return ['resultado'=>$resultado, 'mensaje'=>$mensaje, 'IdAtencionRevisionHIS' => $IdAtencionRevisionHIS];
 	}
 	public function r_his_ce_aprobados(Request $request)
 	{
@@ -238,6 +241,7 @@ WHERE        (Atenciones.idEstadoAtencion = 2) AND (Atenciones.IdTipoServicio = 
 			"height" => "auto",
 			"sortorder" => "desc"
 		));
+		$token=csrf_token();
 		// Enable filter toolbar searching
 		$grid->toolbarfilter = true;
 		////
@@ -247,22 +251,27 @@ function()
 var selr = jQuery('#grid').jqGrid('getGridParam','selarrrow');
 if(selr.length>0)
 {
-	selr.forEach(function(IdAtencion) {
-		$.ajax({
-			url:"enviar_atencion/"+IdAtencion,
-			async:false,
-			dataType:'json',
-			method:"get",
-			success:function(response)
-			{
-				console.log(response);
-			}
-		});
-	});
+	//console.log(selr);
+	$.ajax({
+            url: 'envio_masivo',
+            type: 'POST',
+            data: {
+                atenciones: selr,
+                _token: '$token'
+            },
+            success: function(response) {
+                console.log(response);
+                $('#grid').trigger('reloadGrid');
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+                alert('Ocurrió un error al enviar las atenciones.');
+            }
+        });
 	$('#grid').trigger( 'reloadGrid' );
 }
 else
-	alert("Seleccione Atenciones para Desaprobar");
+	alert("Seleccione Atenciones para Enviar a HIS Minsa");
 }
 DBLCLICK;
 		$b_aprobar = array(
@@ -462,5 +471,20 @@ WHERE        (Atenciones.idEstadoAtencion = 2) AND (Atenciones.IdTipoServicio = 
 				$mensaje=$ObtenerDatosAtencionHis['mensaje'];
 			return ['resultado'=>$resultado,'mensaje'=>$mensaje,'datos'=>$datos];
 		}
+	}
+	public function envio_masivo(Request $request)
+	{
+		$resultado=false;
+		$mensaje=null;
+		$datos=null;
+		$envio_masivo=RS_His::envio_masivo($request->input('atenciones', []),auth()->user()->IdEmpleado);
+		if($envio_masivo['resultado'])
+		{
+			$datos=$envio_masivo['datos'];
+			$resultado=true;
+		}
+		else
+			$mensaje=$envio_masivo['mensaje'];
+		return ['resultado'=>$resultado,'mensaje'=>$mensaje,'datos'=>$datos];
 	}
 }

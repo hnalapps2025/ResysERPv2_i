@@ -80,15 +80,20 @@
 <script type="text/javascript">
 function imprimir()
 {
+	const estilos = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
+        .map(elemento => elemento.outerHTML)
+        .join('');
 	const contenido = document.getElementById('imprimir').innerHTML;
-      const ventanaImpresion = window.open('', '', 'height=600,width=800');
-      ventanaImpresion.document.write('<html><head><title>Imprimir</title></head><body>');
-      ventanaImpresion.document.write(contenido);
-      ventanaImpresion.document.write('</body></html>');
-      ventanaImpresion.document.close();
-      ventanaImpresion.focus();
-      ventanaImpresion.print();
-      ventanaImpresion.close();
+	const ventanaImpresion = window.open('', '', 'height=600,width=800');
+  ventanaImpresion.document.write('<html><head><title>Imprimir</title>');
+  ventanaImpresion.document.write(estilos);
+  ventanaImpresion.document.write('</head><body>');
+  ventanaImpresion.document.write(contenido);
+  ventanaImpresion.document.write('</body></html>');
+  ventanaImpresion.document.close();
+  ventanaImpresion.focus();
+  ventanaImpresion.print();
+  ventanaImpresion.close();
 }
 </script>
 <!-- end page level scripts -->
