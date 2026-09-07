@@ -36,7 +36,7 @@ FROM            Atenciones INNER JOIN
 					 AtencionesRevisionHIS ON Atenciones.IdAtencion = AtencionesRevisionHIS.IdAtencion INNER JOIN
 					 Medicos ON Atenciones.IdMedicoIngreso = Medicos.IdMedico INNER JOIN
 					 Empleados ON Medicos.IdEmpleado = Empleados.IdEmpleado
-WHERE        (Atenciones.idEstadoAtencion = 2) AND (Atenciones.IdTipoServicio = 1) AND (isnull(AtencionesRevisionHIS.Estado,1)=1)";
+WHERE        (Atenciones.idEstadoAtencion = 2) AND (Atenciones.IdTipoServicio = 1) AND (isnull(AtencionesRevisionHIS.Estado,1)=1) and cast(Atenciones.FechaIngreso as date)<=cast(getdate() as date)";
 		// set the ouput format to json
 		$grid->dataType = 'json';
 		$grid->setColModel();
