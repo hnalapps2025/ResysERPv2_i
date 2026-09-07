@@ -112,7 +112,7 @@ class RS_ArchivoClinico
 		$datos=null;
 		$filas=DB::select("SELECT        HistoriasSolicitadas.IdHistoriaSolicitada, HistoriasSolicitadas.IdPaciente,
                          HistoriasSolicitadas.FechaSolicitud, HistoriasSolicitadas.HoraSolicitud, HistoriasSolicitadas.FechaRequerida, HistoriasSolicitadas.HoraRequerida,
-						 isnull(HistoriasSolicitadas.IdMotivo,1)) as IdMotivo, 
+						 isnull(HistoriasSolicitadas.IdMotivo,1) as IdMotivo, 
                          HistoriasSolicitadas.IdServicio, HistoriasSolicitadas.IdAtencion, HistoriasSolicitadas.IdEmpleadoSolicita, isnull(HistoriasSolicitadas.estado,1) as estado,
 						 Servicios.Nombre as Servicio
 FROM            HistoriasSolicitadas
