@@ -53,34 +53,9 @@
 			<input type="submit" name="accion" id="Buscar" value="Buscar" class="form-control btn btn-primary col-lg-6"/>
 		</div>
 		@isset($datos)
-		<table width="100%" border=1>
-			<thead>
-			  <tr>
-				<th>Nro Historia</th>
-				<th>Servicio</th>
-				<th>Fecha Movimiento</th>
-				<th>Tipo Movimiento</th>
-				<th>Archivero</th>
-				<th>Conserje</th>
-				<th>Observación</th>
-			  </tr>
-			</thead>
-			<tbody>
-			  <!-- Filas de ejemplo -->
-			  <tr>
-				<td>{{$datos->NroHistoriaClinica}}</td>
-				<td>{{$datos->Servicio}}</td>
-				<td>{{$datos->FechaMovimiento}}</td>
-				<td>{{$datos->Motivo}}</td>
-				<td>{{$datos->Archivero}}</td>
-				<td>{{$datos->Conserje}}</td>
-				<td>{{$datos->Observacion}}</td>
-			  </tr>
-			</tbody>
-		</table>
 		<div class="form-group row m-12">
 			{{html()->label('Observacion','Observacion')->class(['col-lg-2'])}}
-			{{html()->textarea('Observacion','')->placeholder('Observacion')->class(['form-control col-lg-10'])}}
+			{{html()->textarea('Observacion',$datos->Observacion)->placeholder('Observacion')->attribute('autofocus', true)->class(['form-control col-lg-10'])}}
 		</div>
 		<div class="form-group row m-12">
 			<input type="submit" name="accion" id="Retornar" value="Retornar" class="form-control btn btn-success col-lg-12"/>
