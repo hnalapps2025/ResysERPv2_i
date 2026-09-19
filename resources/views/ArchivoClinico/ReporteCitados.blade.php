@@ -2,7 +2,7 @@
 
 {{-- Page title --}}
 @section('title')
-    No Devueltas X Ruta
+    Reporte Citados
     @parent
 @stop
 {{-- page level styles --}}
@@ -11,33 +11,6 @@
     <!--Page level styles-->
     <link type="text/css" rel="stylesheet" href="{{asset('assets/css/pages/form_elements.css')}}"/>	
 	<style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-
-    table {
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-
-    thead {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
-
-    tr:hover {
-      background-color: #e0f7fa;
-    }
   </style>
 @stop
 @section('content')
@@ -62,14 +35,6 @@
 		<div class="col-lg-12"><input type='submit' class='form-control btn btn-primary'/></div>
 	</div>
 {{html()->form()->close()}}
-    @isset($Tabla)
-	<div class="form-group row">
-		<div class="col-lg-12"><button onclick="imprimir()" class='form-control btn btn-success'>Imprimir</button></div>
-	</div>
-	<div id="imprimir">
-	{!!$Tabla!!}
-	</div>
-	@endisset
 </div>
 @stop
 @section('footer_scripts')
@@ -77,23 +42,6 @@
 
 <!--Page level scripts-->
 <script type="text/javascript">
-function imprimir()
-{
-	const estilos = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
-        .map(elemento => elemento.outerHTML)
-        .join('');
-	const contenido = document.getElementById('imprimir').innerHTML;
-	const ventanaImpresion = window.open('', '', 'height=600,width=800');
-  ventanaImpresion.document.write('<html><head><title>Imprimir</title>');
-  ventanaImpresion.document.write(estilos);
-  ventanaImpresion.document.write('</head><body>');
-  ventanaImpresion.document.write(contenido);
-  ventanaImpresion.document.write('</body></html>');
-  ventanaImpresion.document.close();
-  ventanaImpresion.focus();
-  ventanaImpresion.print();
-  ventanaImpresion.close();
-}
 </script>
 <!-- end page level scripts -->
 @stop

@@ -15,9 +15,11 @@
 	</style>
 @stop
 @section('content')
-@isset($mensaje)
-<h4 style="background-color: #43ca06;">{{$mensaje}}</h4>
-@endisset
+@if(session('mensaje'))
+    <div class="alert alert-success">
+        {{ session('mensaje') }}
+    </div>
+@endif
 @if($errors->any())
 <div class="alert alert-danger">{{ $errors->first() }}</div>
 @endif
