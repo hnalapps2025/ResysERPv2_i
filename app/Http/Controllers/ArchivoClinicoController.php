@@ -769,7 +769,7 @@ WHERE        (ArchivoRutaServicio.estado = 1) AND (ArchivoRuta.estado = 1) AND (
 							 ArchivoRutaServicio ON ArchivoRutaServicio.IdServicio = Servicios.IdServicio INNER JOIN
 							 ArchivoRuta ON ArchivoRutaServicio.IdRuta = ArchivoRuta.IdRuta INNER JOIN
 							 Atenciones ON Citas.IdAtencion = Atenciones.IdAtencion INNER JOIN
-							 MovimientosHistoriaClinica ON Atenciones.IdAtencion = MovimientosHistoriaClinica.IdAtencion INNER JOIN
+							 MovimientosHistoriaClinica ON Atenciones.IdAtencion = MovimientosHistoriaClinica.IdAtencion LEFT OUTER JOIN
 							 Empleados ON MovimientosHistoriaClinica.IdEmpleadoRecepcion = Empleados.IdEmpleado INNER JOIN
 							 ProgramacionMedica ON Citas.IdProgramacion = ProgramacionMedica.IdProgramacion INNER JOIN
 							 Turnos ON ProgramacionMedica.IdTurno = Turnos.IdTurno
