@@ -11,11 +11,14 @@
     <!--Page level styles-->
     <link type="text/css" rel="stylesheet" href="{{asset('assets/css/pages/form_elements.css')}}"/>
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
-
-	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-	<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 	<style>
-  </style>
+    .titulo-reporte {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+	</style>
 @stop
 @section('content')
 @if($errors->any())
@@ -39,6 +42,9 @@
 	<input type="button" value="Imprimir" class="form-control btn btn-success" onclick="imprimir()"/>
 </div>
 <div id='imprimir'>
+	<div class="titulo-reporte">
+        No Devueltas Por Serie
+    </div>
 	<table border="1" width="100%" id="tablaHistorias" style="font-size:9px">
 	  <thead style="background-color: #4CAF50; color: white;">
 		<tr>
@@ -80,7 +86,7 @@
 $(document).ready(function() {
     $('#tablaHistorias').DataTable({
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json'
         },
 		pageLength: 5000,
 		autoWidth: false,
@@ -99,15 +105,77 @@ $(document).ready(function() {
 });
 function imprimir()
 {
-	const contenido = document.getElementById('imprimir').innerHTML;
-      const ventanaImpresion = window.open('', '', 'height=600,width=800');
-      ventanaImpresion.document.write('<html><head><title>Imprimir</title></head><body>');
-      ventanaImpresion.document.write(contenido);
-      ventanaImpresion.document.write('</body></html>');
-      ventanaImpresion.document.close();
-      ventanaImpresion.focus();
-      ventanaImpresion.print();
-      ventanaImpresion.close();
+    const tabla = document.getElementById('tablaHistorias').cloneNode(true);
+
+    // Eliminar clases/atributos propios de DataTables
+    tabla.removeAttribute('id');
+    tabla.classList.remove('dataTable');
+
+    // Crear ventana
+    const ventanaImpresion = window.open('', '', 'height=800,width=1200');
+
+    ventanaImpresion.document.write(`
+        <html>
+        <head>
+            <title>No Devueltas Por Serie</title>
+
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    font-size: 9px;
+                }
+
+                .titulo-reporte {
+                    text-align: center;
+                    font-size: 14px;
+                    font-weight: bold;
+                    margin-bottom: 10px;
+                }
+
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+
+                th {
+                    background-color: #4CAF50;
+                    color: white;
+                    font-weight: bold;
+                }
+
+                th, td {
+                    border: 1px solid #000;
+                    padding: 3px;
+                }
+
+                @media print {
+                    @page {
+                        size: A4;
+                        margin: 10mm;
+                    }
+                }
+            </style>
+        </head>
+
+        <body>
+
+            <div class="titulo-reporte">
+                No Devueltas Por Serie
+            </div>
+
+            ${tabla.outerHTML}
+
+        </body>
+        </html>
+    `);
+
+    ventanaImpresion.document.close();
+    ventanaImpresion.focus();
+
+    setTimeout(function() {
+        ventanaImpresion.print();
+        ventanaImpresion.close();
+    }, 300);
 }
 </script>
 <!-- end page level scripts -->

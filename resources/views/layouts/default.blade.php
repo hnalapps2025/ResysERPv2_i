@@ -21,7 +21,6 @@
     <link type="text/css" rel="stylesheet" href="{{asset('assets/css/custom.css')}}" />
     <link type="text/css" rel="stylesheet" href="{{asset('css/jquery-ui.css')}}" />
     <link type="text/css" rel="stylesheet" href="{{asset('css/trirand/ui.jqgrid.css')}}" />
-    <link type="text/css" rel="stylesheet" href="#" id="skin_change" />
     <script type="text/javascript" src="{{asset('assets/js/components.js')}}"></script>
     <script type="text/javascript" src="{{asset('assets/js/jquery-ui.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('assets/js/i18n/grid.locale-es.js')}}"></script>
